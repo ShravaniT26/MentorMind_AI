@@ -6,3 +6,12 @@ redis
 pydantic
 requests
 python-dotenv
+celery==5.3.6
+redis==5.0.1
+opencv-python
+python-dotenv
+numpy
+pydub
+speechrecognition
+transformers
+torch

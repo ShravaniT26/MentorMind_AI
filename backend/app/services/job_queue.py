@@ -1,6 +1,7 @@
-# backend/app/services/job_queue.py
+ #backend/app/services/job_queue.py
 from celery import Celery
 import os
+from app.config import celery_app
 
 REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 celery_app = Celery("mentor_tasks", broker=REDIS_URL, backend=REDIS_URL)
@@ -11,3 +12,10 @@ celery_app = Celery("mentor_tasks", broker=REDIS_URL, backend=REDIS_URL)
 def enqueue_accessibility_job(file_path, session_id=None, mentor_id=None):
     # returns AsyncResult (call .delay() on this function where used)
     return celery_app.send_task("accessibility.process_accessibility_modes_task", args=(file_path, session_id, mentor_id))
+def enqueue_job(video_path: str, mode: str, job_id: str):
+    celery_app.send_task(
+        "process_video_task",
+        args=[video_path, mode, job_id],
+        queue="accessibility"
+    )
+    return {"status": "queued", "job_id": job_id}

@@ -1,6 +1,8 @@
 from faster_whisper import WhisperModel
 import moviepy.editor as mp
 
+
+
 model = WhisperModel("small", device="cpu")
 
 def generate_subtitles(video_path):

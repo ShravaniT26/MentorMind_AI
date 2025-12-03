@@ -1,3 +1,5 @@
+# backend/app/services/mode_blind.py
+
 import cv2
 from transformers import pipeline
 from gtts import gTTS
