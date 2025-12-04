@@ -7,6 +7,8 @@ import { SuggestedVideos } from '../components/SuggestedVideos';
 import { Download, Share2 } from 'lucide-react';
 import { useDarkMode } from '../contexts/DarkModeContext';
 import { motion } from 'framer-motion';
+import { ResultsGraph } from "../components/ResultsGraph";
+
 
 // ⭐ FIXED — correct base URL (no {id} here)
 const BACKEND_URL = "http://localhost:8000/api/v1/results";
@@ -300,6 +302,16 @@ export function Results() {
             <AccessibilityPanel />
           </div>
         )}
+
+        {/* 🔥 Graph Section */}
+        <ResultsGraph metrics={data.metrics} />
+
+        <div className="grid md:grid-cols-2 gap-6">
+         {data.metrics.map((metric: any) => (
+          <MetricCard key={metric.name} metric={metric} />
+         ))}
+        </div>
+
 
         <div className="grid md:grid-cols-2 gap-6">
           {data.metrics.map((metric: any) => (
