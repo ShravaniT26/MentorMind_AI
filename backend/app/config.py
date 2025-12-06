@@ -1,4 +1,13 @@
+import os
 from celery import Celery
+from dotenv import load_dotenv
+
+load_dotenv()
+
+AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY_ID")
+AWS_SECRET_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
+AWS_REGION = os.getenv("AWS_REGION", "ap-south-1")
+AWS_BUCKET = os.getenv("AWS_BUCKET_NAME")
 
 def make_celery():
     celery = Celery(

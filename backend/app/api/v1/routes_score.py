@@ -6,8 +6,29 @@ import subprocess
 from pathlib import Path
 import whisper
 import re
+import uuid
+from app.utils.file_utils import upload_file_to_s3
+from app.workers.scoring_worker import process_scoring
 
-router = APIRouter(prefix="/api/v1/score", tags=["Scoring"])
+router = APIRouter(prefix="/score")
+
+JOB_MAP = {}  # job_id → celery task id
+
+@router.post("/")
+async def upload_for_scoring(video_file: UploadFile = File(...)):
+    job_id = str(uuid.uuid4())
+
+    # Read file bytes
+    file_bytes = await video_file.read()
+
+    # Upload to S3
+    s3_url = upload_file_to_s3(file_bytes, ext=".mp4")
+
+    # Start Celery scoring task
+    task = process_scoring.delay(s3_url)
+    JOB_MAP[job_id] = task.id
+
+    return {"evaluation_id": job_id}
 
 RESULTS_DIR = "results"
 os.makedirs(RESULTS_DIR, exist_ok=True)

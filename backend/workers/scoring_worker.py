@@ -1,9 +1,26 @@
+import boto3
+import requests
+import tempfile
+from app.services.video_proccessor import extract_features
+from app.services.video_scoring import compute_scores, compute_overall
+from app.config import AWS_ACCESS_KEY, AWS_SECRET_KEY, AWS_REGION
 from celery import Celery
 from app.services.video_scoring import score_video
 from app.services.mode_blind import generate_blind_version
 from app.services.mode_deaf import generate_deaf_version
 from app.services.mode_easy import generate_easy_version
 from app.db.sessions_store import store_result
+
+def download_s3_video(url):
+    # Download S3 video URL to temp file
+    response = requests.get(url)
+    response.raise_for_status()
+
+    temp = tempfile.NamedTemporaryFile(delete=False, suffix=".mp4")
+    temp.write(response.content)
+    temp.close()
+    return temp.name
+
 
 celery_app = Celery(
     "scoring_worker",
@@ -12,12 +29,19 @@ celery_app = Celery(
 )
 
 @celery_app.task()
-def process_scoring(video_path: str):
+def process_scoring(s3_url: str):
+    # Download from S3
+    video_path = download_s3_video(s3_url)
+
+    # Extract features
     features = extract_features(video_path)
+
+    # Compute scores
     scores = compute_scores(features)
     overall = compute_overall(scores)
 
     return {
+        "video_url": s3_url,
         "overall": overall,
         **scores,
         "feedback": {
