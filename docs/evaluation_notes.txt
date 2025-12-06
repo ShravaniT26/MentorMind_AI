@@ -1,0 +1,54 @@
+## 8.1 Evaluation metrics (per-dimension)
+
+Clarity: correlation with human ratings — measure Pearson correlation or Spearman against human scores. If classification, use accuracy/F1.
+
+Engagement: AUC or ROC for binary engaged vs not engaged; or MAE if regression.
+
+Pace: WPM error (MAE), acceptable threshold ±15 WPM.
+
+Filler Score: Precision & Recall on detected filler words (true positives from transcripts).
+
+Tech Score: semantic similarity against a technical-keyword baseline — measure cosine similarity; evaluate correlation with human ratings.
+
+## 8.2 Composite scoring
+
+Normalize each metric to 0–1. Weighted average:
+
+overall = 0.25*clarity + 0.25*engagement + 0.20*pace + 0.15*filler + 0.15*tech
+
+
+Scale to 0–10 for UI: overall * 10.
+
+## 8.3 Ground truth & datasets
+
+Create / collect a small test set: 50–200 lecture videos labeled by humans (score 1–10 per dimension).
+
+Use public datasets where possible (TED talks, lecture recordings) and annotate a subset.
+
+## 8.4 Offline evaluation & unit tests
+
+Unit tests for:
+
+Feature extraction validation (audio length, frame count).
+
+Model inference returns valid range [0..1].
+
+Full pipeline returns expected JSON keys.
+
+Integration tests:
+
+Upload file -> job enqueued -> worker processed (use small sample video).
+
+Mock S3 and Redis for CI.
+
+## 8.5 Acceptance thresholds (example)
+
+Clarity correlation with human raters >= 0.6 (Spearman)
+
+Engagement AUC >= 0.75
+
+Pace MAE <= 15 WPM
+
+Filler detection F1 >= 0.7
+
+Tech score correlation >= 0.5

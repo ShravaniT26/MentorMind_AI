@@ -1,0 +1,17 @@
+Goal: accept lecture video → produce accessibility assets (blind/deaf/easy) and a scored evaluation across five dimensions: clarity, engagement, pace, filler_score, tech_score, plus overall score. The system must be asynchronous (background worker), scalable, and secure.
+
+## **High-level components**
+
+Frontend (React) — upload UI, progress, results dashboard, graphs, share/download.
+
+API Gateway (FastAPI) — handles uploads, issues jobs, returns results.
+
+Object Storage (S3) — stores raw uploads, processed videos, audio, thumbnails, reports.
+
+Task Queue (Redis) — broker for background tasks.
+
+Worker Pool (Celery workers) — downloads video from S3, runs feature extraction + ONNX model inference, generates accessibility artifacts, uploads outputs to S3, writes results.
+
+Models (ONNX) — clarity, engagement, pace, filler, tech depth (dummy or real). Loaded inside workers for inference.
+
+Results Store — simple JSON files / lightweight DB (SQLite / Postgres / Redis) to keep results and metadata.

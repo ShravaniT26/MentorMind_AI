@@ -1,0 +1,43 @@
+                               +-----------------+
+                               |   React UI      |
+                               | (Upload / Result)|
+                               +--------+--------+
+                                        |
+                                        | REST / HTTP (POST / GET)
+                                        |
+                               +--------v--------+
+                               |    FastAPI      |
+                               |  (API Gateway)  |
+                               +---+---------+---+
+                upload -> S3 URL |         |  enqueue job
+                               |         v
+                               |   +-----+-----+
+                      +--------+---|   Redis    |
+                      |           +-----------+
+                      |
+        +-------------v--------------+
+        |       Amazon S3 Bucket     |
+        | videos_raw/  videos_processed/
+        | accessibility/  audio/ thumbnails/
+        +-------------+--------------+
+                      |
+                      | celery worker downloads
+                      v
+               +------+--------+                 +-----------------------+
+               | Celery Worker | --loads models->| ONNX Models (local/S3)|
+               |  (process)    |                 +-----------------------+
+               +------+--------+
+                      |
+    Generates: transcript, metrics, assets (audio, srt, mp4)
+                      |
+                      v
+               +------+--------+
+               |  Results Store |
+               | (JSON/DB/S3)   |
+               +------+--------+
+                      |
+                      v
+               +------+--------+
+               |   Frontend     |
+               |  Polls / Fetch |
+               +---------------+

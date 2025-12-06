@@ -57,6 +57,54 @@ Uploaded videos, processed videos, audio versions, and reports stored securely.
 
 ---
 
+🧰 Setup Instructions (Local Development)
+1) Clone the repo
+git clone https://github.com/your-name/MentorMindAI.git
+cd MentorMindAI
+
+🖥️ Backend Setup (FastAPI)
+2) Create virtual environment
+cd backend
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+
+3) Install dependencies
+pip install -r requirements.txt
+
+4) Start Redis (for Celery)
+
+Mac/Linux:
+
+redis-server
+
+
+Windows:
+
+Install Redis via Docker
+
+docker run -p 6379:6379 redis
+
+5) Start FastAPI
+uvicorn app.main:app --reload
+
+🧵 Worker Setup (Celery)
+
+Open new terminal:
+
+cd backend
+source venv/bin/activate
+celery -A app.workers.celery_app.celery worker --loglevel=info
+
+
+Now Celery runs async scoring tasks.
+
+🌐 Frontend Setup (React)
+cd frontend
+npm install
+npm run dev
+
+---
+
 #  System Architecture
 
                         ┌──────────────────────────────┐
@@ -118,34 +166,6 @@ Uploaded videos, processed videos, audio versions, and reports stored securely.
                     └───────────────────┘
 
 
-
----
-
-#  Tech Stack
-
-### **Frontend**
-- React + TypeScript  
-- TailwindCSS  
-- Framer Motion  
-- Lucide Icons  
-
-### **Backend**
-- FastAPI  
-- Celery  
-- Redis  
-- ONNX Runtime  
-- Boto3 (AWS S3)
-
-### **Infrastructure**
-- AWS S3 (Storage)  
-- Docker  
-
----
-
-#  Folder Structure
-
-
-
 ---
 
 #  API Documentation
@@ -200,54 +220,41 @@ Response:
 
 ---
 
-🧰 Setup Instructions (Local Development)
-1️⃣ Clone the repo
-git clone https://github.com/your-name/MentorMindAI.git
-cd MentorMindAI
 
-🖥️ Backend Setup (FastAPI)
-2️⃣ Create virtual environment
-cd backend
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
+---
 
-3️⃣ Install dependencies
-pip install -r requirements.txt
+##📦 **List of Dependencies**
+>>Backend
 
-4️⃣ Start Redis (for Celery)
+fastapi
+uvicorn
+celery
+redis
+boto3
+python-multipart
+onnxruntime
+numpy
+librosa
+moviepy
+pydantic
 
-Mac/Linux:
+>>Frontend
 
-redis-server
-
-
-Windows:
-
-Install Redis via Docker
-
-docker run -p 6379:6379 redis
-
-5️⃣ Start FastAPI
-uvicorn app.main:app --reload
-
-🧵 Worker Setup (Celery)
-
-Open new terminal:
-
-cd backend
-source venv/bin/activate
-celery -A app.workers.celery_app.celery worker --loglevel=info
+react
+typescript
+tailwindcss
+framer-motion
+lucide-react
+react-router-dom
 
 
-Now Celery runs async scoring tasks.
+---
+## *Contributions
 
-🌐 Frontend Setup (React)
-cd frontend
-npm install
-npm run dev
+Shravani Tanksale(AI Lead): Built scoring models, backend logic, Celery processing, accessibility modes, and end-to-end integration.
 
+Vidyankshini Vibhute(Frontend): Developed UI, graphs, animations, upload flow, dashboard, and linked frontend with backend.
 
-
-
+Devika Mule(Cloud/DevOps): Set up AWS S3, Redis, Celery, cloud architecture, deployment environment, and backend optimizations.
 
 
