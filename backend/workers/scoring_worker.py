@@ -11,12 +11,23 @@ celery_app = Celery(
     backend="redis://localhost:6379/1"
 )
 
-@celery_app.task(name="process_video_score")
-def process_video_score(video_path: str):
-    """ Run real scoring and store results """
-    results = score_video(video_path)
-    store_result(results)
-    return results
+@celery_app.task()
+def process_scoring(video_path: str):
+    features = extract_features(video_path)
+    scores = compute_scores(features)
+    overall = compute_overall(scores)
+
+    return {
+        "overall": overall,
+        **scores,
+        "feedback": {
+            "clarity": "Improve explanation structure.",
+            "engagement": "Increase energy and body language.",
+            "pace": "Try slowing down slightly.",
+            "filler_score": "Reduce filler words like 'um', 'so'.",
+            "technical_depth": "Add more examples or deep insights."
+        }
+    }
 
 @celery_app.task(name="process_accessibility_mode")
 def process_accessibility_mode(video_path: str, mode: str):
