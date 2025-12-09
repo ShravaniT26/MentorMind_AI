@@ -1,30 +1,47 @@
-# backend/app/services/mode_blind.py
-
-import cv2
-from transformers import pipeline
-from gtts import gTTS
+# mode_blind.py
 import os
+import cv2
+from gtts import gTTS
+import numpy as np
+import tempfile
 
-captioner = pipeline("image-to-text", model="nlpconnect/vit-gpt2-image-captioning")
+def describe_frame(frame):
+    """Basic object description using brightness + motion heuristics."""
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    brightness = np.mean(gray)
+
+    if brightness < 60:
+        return "The scene is dark."
+    elif brightness > 180:
+        return "The scene is bright."
+
+    return "A normal lighting scene with one or more objects."
 
 def video_to_description(video_path):
-    vid = cv2.VideoCapture(video_path)
+    cap = cv2.VideoCapture(video_path)
     descriptions = []
 
+    frame_count = 0
     while True:
-        ret, frame = vid.read()
+        ret, frame = cap.read()
         if not ret:
             break
 
-        frame_path = "temp_frame.jpg"
-        cv2.imwrite(frame_path, frame)
+        # Describe every ~1 sec
+        if frame_count % 30 == 0:
+            desc = describe_frame(frame)
+            descriptions.append(desc)
 
-        caption = captioner(frame_path)[0]["generated_text"]
-        descriptions.append(caption)
+        frame_count += 1
 
-    full_text = ". ".join(descriptions)
-    tts = gTTS(text=full_text, lang="en")
-    audio_out = video_path.replace(".mp4", "_blind.mp3")
-    tts.save(audio_out)
+    cap.release()
 
-    return audio_out
+    # Join into a single narration
+    text = ". ".join(descriptions)
+
+    # Convert to audio
+    output_audio = video_path.replace(".mp4", "_blind_mode.mp3")
+    tts = gTTS(text)
+    tts.save(output_audio)
+
+    return output_audio

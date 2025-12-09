@@ -1,9 +1,17 @@
+import sys
+import os
+
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+sys.path.append(ROOT_DIR)
+
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.v1.routes_upload import router as upload_router
-from app.api.v1.routes_health import router as health_router
-from app.api.v1 import routes_results
-from app.api.v1 import routes_score
+from src.backend.app.api.v1.routes_upload import router as upload_router
+from src.backend.app.api.v1.routes_health import router as health_router
+from src.backend.app.api.v1.routes_results import router as results_router
+from src.backend.app.api.v1 import routes_score
+
 
 
 
@@ -20,7 +28,7 @@ app.add_middleware(
 
 app.include_router(upload_router, prefix="/api/v1")
 app.include_router(health_router, prefix="/api/v1")
-app.include_router(routes_results, prefix="/api/v1")
+app.include_router(results_router, prefix="/api/v1")
 app.include_router(routes_score.router)
 
 

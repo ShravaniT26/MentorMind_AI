@@ -1,15 +1,18 @@
+import sys, os
+ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
+sys.path.append(ROOT)
 import boto3
 import requests
 import tempfile
-from app.services.video_proccessor import extract_features
-from app.services.video_scoring import compute_scores, compute_overall
-from app.config import AWS_ACCESS_KEY, AWS_SECRET_KEY, AWS_REGION
+from src.backend.app.services.video_proccessor import extract_features
+from src.backend.app.services.video_scoring import compute_scores, compute_overall
+from src.backend.app.config import AWS_ACCESS_KEY, AWS_SECRET_KEY, AWS_REGION
 from celery import Celery
-from app.services.video_scoring import score_video
-from app.services.mode_blind import generate_blind_version
-from app.services.mode_deaf import generate_deaf_version
-from app.services.mode_easy import generate_easy_version
-from app.db.sessions_store import store_result
+from src.backend.app.services.video_scoring import score_video
+from src.backend.app.services.mode_blind import generate_blind_version
+from src.backend.app.services.mode_deaf import generate_deaf_version
+from src.backend.app.services.mode_easy import generate_easy_version
+from src.backend.app.db.sessions_store import store_result
 
 def download_s3_video(url):
     # Download S3 video URL to temp file

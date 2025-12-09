@@ -7,8 +7,9 @@ from pathlib import Path
 import whisper
 import re
 import uuid
-from app.utils.file_utils import upload_file_to_s3
-from app.workers.scoring_worker import process_scoring
+
+from src.backend.app.services.job_queue import enqueue_job
+
 
 router = APIRouter(prefix="/score")
 

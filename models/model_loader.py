@@ -1,8 +1,17 @@
+import onnxruntime as ort
 import os
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+MODEL_DIR = os.path.join(BASE_DIR, "models")
+
 import onnxruntime as ort
 
-BASE_DIR = os.path.dirname(__file__)
+def load_model(path):
+    session = ort.InferenceSession(path)
+    print("\n🔍 MODEL LOADED:", path)
 
-def load_model(name: str):
-    path = os.path.join(BASE_DIR, name)
-    return ort.InferenceSession(path, providers=["CPUExecutionProvider"])
+    print("➡ Inputs:", [i.name for i in session.get_inputs()])
+    print("➡ Outputs:", [o.name for o in session.get_outputs()])
+
+    return session
+

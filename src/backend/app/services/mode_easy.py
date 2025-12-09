@@ -1,9 +1,28 @@
-from transformers import pipeline
+# mode_easy.py
 from gtts import gTTS
 
-summarizer = pipeline("summarization")
-
 def generate_easy_audio(text):
-    summary = summarizer(text, max_length=120, min_length=40)[0]["summary_text"]
-    tts = gTTS(summary)
-    return tts
+    simplified = simplify_text(text)
+
+    output_path = "easy_audio.mp3"
+    tts = gTTS(simplified)
+    tts.save(output_path)
+    return output_path
+
+
+def simplify_text(text):
+    """
+    Simple rule-based text simplification.
+    """
+    replacements = {
+        "utilize": "use",
+        "approximately": "about",
+        "demonstrate": "show",
+        "objective": "goal",
+        "methodology": "method"
+    }
+
+    for k, v in replacements.items():
+        text = text.replace(k, v)
+
+    return text

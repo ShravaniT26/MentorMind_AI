@@ -1,113 +1,72 @@
-#  MentorMind AI  
-### AI-Powered Lecture Evaluation & Accessibility Generator
+MentorMindAI – Smart Video Evaluation & Accessibility Engine
 
-MentorMind AI is a smart evaluation system that analyzes uploaded lecture videos and generates:
+MentorMindAI is an AI-powered backend that evaluates videos for teaching quality and also converts videos into different accessibility modes—Blind Mode, Deaf Mode, and Easy Mode.
+This system uses ONNX machine-learning models for scoring and FastAPI for serving all endpoints.
 
-✔ **Real-time teaching performance scores**  
-✔ **Clarity, Engagement, Pace, Technical Depth & Filler Word metrics**  
-✔ **AI-generated accessibility versions** (Blind, Deaf, Easy Mode)  
-✔ **Interactive feedback dashboard** (frontend)  
-✔ **Gamified badges & analytics**  
+🚀 Project Overview
 
-This project enables mentors, teachers, and trainers to receive automated insights and accessibility-enhanced lecture versions.
+This project provides two major functionalities:
 
----
+1. Video Scoring System (AI Evaluation)
 
-#  Features
+Uploads a video and returns:
 
-###  **1. Upload Lecture Videos**
-Users upload MP4 videos through the React frontend.
+-Clarity score
+-Engagement score
+-Pace score
+-Filler word score
+-Technical depth score
+-Weighted overall score
 
-###  **2. AI Scoring Pipeline**
-The backend uses ONNX models + Celery workers to compute:
+Models used:
 
-- **Clarity Score**  
-- **Engagement Score**  
-- **Pace Score**  
-- **Filler Word Score**  
-- **Technical Depth Score**  
-- Combined **Overall Score (0–10)**
+-clarity_model.onnx
+-engagement_cnn.onnx
+-pace_model.onnx
+-filler_model.onnx
+-tech_depth_model.onnx
 
-###  **3. Accessibility Modes**
-Automatically generate alternative versions:
+2. Accessibility Modes
 
-- **Blind Mode → Audio-described video**
-- **Deaf Mode → Auto subtitles (.srt)**
-- **Easy Mode → Simplified transcript text**
+Convert any uploaded video into:
 
-###  **4. Beautiful Results Dashboard**
-Frontend includes:
+Blind Mode
 
-- Metric cards  
-- Scores per parameter  
-- Weekly improvement  
-- Earned badges  
-- Suggested videos  
-- Accessibility toggles  
+Generates audio narration of the video content.
 
-###  **5. Worker Queue System**
-Celery + Redis handles:
+Deaf Mode
 
-- Background scoring  
-- Video processing  
-- Accessibility mode generation  
+Generates subtitles using Whisper STT.
 
-###  **6. AWS S3 Integration**
-Uploaded videos, processed videos, audio versions, and reports stored securely.
+Easy Mode
 
----
+Simplified narration using text summarization + TTS.
 
-🧰 Setup Instructions (Local Development)
-1) Clone the repo
-git clone https://github.com/your-name/MentorMindAI.git
-cd MentorMindAI
-
-🖥️ Backend Setup (FastAPI)
-2) Create virtual environment
-cd backend
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-
-3) Install dependencies
-pip install -r requirements.txt
-
-4) Start Redis (for Celery)
-
-Mac/Linux:
-
-redis-server
+🧱 Project Architecture Overview
+📦 MentorMindAI
+ ┣ backend/
+ │ ┣ app/
+ │ │ ┣ api/v1/
+ │ │ │ ┣ routes_upload.py      → Upload & mode conversion APIs
+ │ │ ┣ services/
+ │ │ │ ┣ video_scoring.py      → ONNX scoring engine
+ │ │ │ ┣ mode_blind.py         → Blind mode processing
+ │ │ │ ┣ mode_deaf.py          → Deaf mode (subtitles)
+ │ │ │ ┣ mode_easy.py          → Easy mode audio
+ │ │ │ ┣ video_processor.py    → File handling utils
+ │ │ ┣ main.py                 → FastAPI entry point
+ ┣ models/
+ │ ┣ clarity_model.onnx
+ │ ┣ engagement_cnn.onnx
+ │ ┣ pace_model.onnx
+ │ ┣ filler_model.onnx
+ │ ┣ tech_depth_model.onnx
+ ┣ frontend/ (optional)
+ ┣ README.md
+ ┣ requirements.txt
 
 
-Windows:
-
-Install Redis via Docker
-
-docker run -p 6379:6379 redis
-
-5) Start FastAPI
-uvicorn app.main:app --reload
-
-🧵 Worker Setup (Celery)
-
-Open new terminal:
-
-cd backend
-source venv/bin/activate
-celery -A app.workers.celery_app.celery worker --loglevel=info
-
-
-Now Celery runs async scoring tasks.
-
-🌐 Frontend Setup (React)
-cd frontend
-npm install
-npm run dev
-
----
-
-#  System Architecture
-
-                        ┌──────────────────────────────┐
+ ┌──────────────────────────────┐
                         │          Frontend            │
                         │        (React + Vite)        │
                         │ ─ File Upload (Video)        │
@@ -166,86 +125,127 @@ npm run dev
                     └───────────────────┘
 
 
----
+⚙️ Setup Instructions
+1. Clone the repository
+git clone https://github.com/your-repo/MentorMindAI
+cd MentorMindAI
 
-#  API Documentation
+2. Create virtual environment
+python -m venv venv
 
-##  **POST /api/v1/score**
-Uploads a video & triggers AI scoring.
+3. Activate environment
 
-### **Request**
-- Multipart Form Data
-  - `video_file`: `.mp4` file
+Windows:
 
-### **Response**
-```json
+venv\Scripts\activate
+
+
+Mac/Linux:
+
+source venv/bin/activate
+
+4. Install dependencies
+pip install -r requirements.txt
+
+5. Ensure FFmpeg is installed (required for moviepy)
+
+Windows:
+
+choco install ffmpeg
+
+
+Mac:
+
+brew install ffmpeg
+
+▶️ How to Run Locally
+
+Start FastAPI server:
+
+uvicorn src.backend.app.main:app --reload
+
+
+Server runs at:
+
+👉 http://localhost:8000
+
+Open docs:
+
+👉 http://localhost:8000/docs
+
+(Interactive Swagger UI)
+
+🔥 API Endpoints
+1️⃣ Upload Video & Get Scores
+POST /upload/video
+
+Response
 {
-  "evaluation_id": "abc123",
-  "status": "processing"
+  "file_id": "56c7e543-0b4e-49f6-9509-fb6cbe6bc9b6",
+  "scores": {
+    "clarity": 0.23,
+    "engagement": 0.45,
+    "pace": 0.31,
+    "filler": -0.04,
+    "tech": 0.12
+  },
+  "overall_score": 0.28
 }
 
-📌 GET /api/v1/results/{evaluation_id}
+2️⃣ Convert Video into Accessibility Mode
+POST /convert?mode=blind
+POST /convert?mode=deaf
+POST /convert?mode=easy
 
-Fetch processed scoring results.
-
-Sample Response
+Response Example
 {
-  "clarity": 0.82,
-  "engagement": 0.74,
-  "pace": 0.65,
-  "filler": 0.40,
-  "technical_depth": 0.71,
-  "overall": 7.8,
-  "feedback": {
-    "clarity": "Good explanation, try adding examples.",
-    "engagement": "Add questions to involve audience."
-  }
+  "status": "success",
+  "output_path": "/mnt/data/uploads/video_blind_mode.mp3"
 }
 
-📌 POST /api/v1/upload
+🧪 Example Input & Output
+Input
 
-Generate accessibility content.
+MP4 video file
+Mode: "deaf"
 
-Parameters:
+Output
 
-video_file
+Extracted audio
 
-mode = blind | deaf | easy
+Speech → Text using Whisper
 
-Response:
-{
-  "job_id": "xyz99",
-  "message": "Processing started"
-}
+.srt subtitle file
 
----
+1
+00:00:01,000 --> 00:00:03,000
+Hello students, today we will learn AI.
 
-
----
-
-##📦 **List of Dependencies**
->>Backend
+📦 List of Dependencies
 
 fastapi
-uvicorn
-celery
-redis
-boto3
+uvicorn[standard]
 python-multipart
-onnxruntime
-numpy
-librosa
-moviepy
+celery[redis]
+redis
 pydantic
+requests
+python-dotenv
+celery==5.3.6
+redis==5.0.1
+opencv-python
+python-dotenv
+numpy
+pydub
+speechrecognition
+transformers
+torch
+pillow
+moviepy
+onnxruntime
 
->>Frontend
+---
 
-react
-typescript
-tailwindcss
-framer-motion
-lucide-react
-react-router-dom
 
 
 ---
