@@ -13,6 +13,15 @@ from src.backend.app.api.v1.routes_results import router as results_router
 from src.backend.app.api.v1 import routes_score
 
 
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/")
+def home():
+    return {"status": "FastAPI working on Vercel!"}
+
+
 
 
 
