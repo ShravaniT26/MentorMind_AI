@@ -11,6 +11,9 @@ from src.backend.app.api.v1.routes_upload import router as upload_router
 from src.backend.app.api.v1.routes_health import router as health_router
 from src.backend.app.api.v1.routes_results import router as results_router
 from src.backend.app.api.v1 import routes_score
+# app/main.py
+from src.backend.app.api.v1.main import app
+
 
 
 from fastapi import FastAPI
