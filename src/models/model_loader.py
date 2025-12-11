@@ -1,7 +1,7 @@
 import os
 import onnxruntime as ort
 import os
-from models.generate_dummy_models import ensure_dummy_models_exist
+from src.models.generate_dummy_models import ensure_dummy_models_exist
 
 # Before loading any ONNX models:
 ensure_dummy_models_exist()
