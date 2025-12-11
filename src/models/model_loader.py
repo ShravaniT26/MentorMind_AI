@@ -1,10 +1,10 @@
 import os
 import onnxruntime as ort
 import os
-from src.models.generate_dummy_models import ensure_dummy_models_exist
+from src.models.generate_dummy_models import create_range_model
 
 # Before loading any ONNX models:
-ensure_dummy_models_exist()
+create_range_model()
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # this points to src/models/
