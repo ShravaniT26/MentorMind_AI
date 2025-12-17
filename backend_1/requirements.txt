@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+python-dotenv
+python-jose
+passlib[bcrypt]
+celery
+redis
+youtube-transcript-api
+openai
