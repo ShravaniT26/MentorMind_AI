@@ -1,53 +1,55 @@
-import os
+import json
 from openai import OpenAI
-from youtube_transcript_api import YouTubeTranscriptApi
+from app.evaluation.transcript import fetch_transcript
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+client = OpenAI()
 
+SYSTEM_PROMPT = """
+You are an expert teaching quality evaluator.
+The transcript may be in Hindi or translated from Hindi.
+Always respond ONLY in valid JSON.
+"""
 
-def get_video_id(url) -> str:
-    url = str(url)   # 🔥 FIX
+def evaluate_transcript(youtube_url: str) -> dict:
+    transcript = fetch_transcript(youtube_url)
 
-    if "v=" in url:
-        return url.split("v=")[1].split("&")[0]
-    elif "youtu.be/" in url:
-        return url.split("youtu.be/")[1].split("?")[0]
-    else:
-        raise ValueError("Invalid YouTube URL")
+    if not transcript.strip():
+        raise RuntimeError("Transcript is empty after fetch")
 
-
-
-def get_transcript(youtube_url) -> str:
-    video_id = get_video_id(youtube_url)
-    transcript = YouTubeTranscriptApi.get_transcript(video_id)
-    return " ".join(t["text"] for t in transcript)
-
-
-def evaluate_transcript(transcript: str) -> dict:
-    prompt = f"""
-You are an expert education evaluator.
-
-Rate the teacher based on:
+    response = client.responses.create(
+        model="gpt-4.1-mini",
+        response_format={"type": "json"},
+        input=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {
+                "role": "user",
+                "content": f"""
+Evaluate this lecture on:
 - clarity
 - engagement
 - tone
 - pacing
-- content delivery
+- content_delivery
 
-Give scores from 1 to 10.
-Return STRICT JSON only.
+Return EXACT JSON:
+{{
+  "clarity": {{ "score": 0-10, "reason": "string" }},
+  "engagement": {{ "score": 0-10, "reason": "string" }},
+  "tone": {{ "score": 0-10, "reason": "string" }},
+  "pacing": {{ "score": 0-10, "reason": "string" }},
+  "content_delivery": {{ "score": 0-10, "reason": "string" }},
+  "overall_score": 0-10
+}}
 
 Transcript:
 {transcript}
 """
-
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[
-            {"role": "system", "content": "You return only valid JSON."},
-            {"role": "user", "content": prompt}
-        ],
-        temperature=0.3
+            }
+        ]
     )
 
-    return eval(response.choices[0].message.content)
+    output = response.output_text
+    if not output:
+        raise RuntimeError("OpenAI returned empty output")
+
+    return json.loads(output)
