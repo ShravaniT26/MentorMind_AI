@@ -3,7 +3,7 @@ from app.evaluation.service import evaluate_full_transcript
 from app.evaluation.transcript import fetch_transcript
 
 from app.evaluation.evaluator import (
-    fetch_transcript,
+    
     evaluate_transcript
 )
 
