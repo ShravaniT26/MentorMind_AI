@@ -1,7 +1,7 @@
  #backend/app/services/job_queue.py
 from celery import Celery
 import os
-from src.backend.app.config import celery_app
+from src.backend.app.upload_engine.config import celery_app
 
 REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 celery_app = Celery("mentor_tasks", broker=REDIS_URL, backend=REDIS_URL)

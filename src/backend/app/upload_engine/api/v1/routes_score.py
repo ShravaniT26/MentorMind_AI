@@ -8,7 +8,7 @@ import whisper
 import re
 import uuid
 
-from src.backend.app.services.job_queue import enqueue_job
+from src.backend.app.upload_engine.services.job_queue import enqueue_job
 
 
 router = APIRouter(prefix="/score")
@@ -20,14 +20,7 @@ async def upload_for_scoring(video_file: UploadFile = File(...)):
     job_id = str(uuid.uuid4())
 
     # Read file bytes
-    file_bytes = await video_file.read()
-
-    # Upload to S3
-    s3_url = upload_file_to_s3(file_bytes, ext=".mp4")
-
-    # Start Celery scoring task
-    task = process_scoring.delay(s3_url)
-    JOB_MAP[job_id] = task.id
+    
 
     return {"evaluation_id": job_id}
 

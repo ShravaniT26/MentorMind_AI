@@ -1,5 +1,5 @@
-from app.evaluation.chunker import chunk_text
-from app.evaluation.evaluator import evaluate_transcript
+from app.youtube_engine.evaluation.chunker import chunk_text
+from app.youtube_engine.evaluation.evaluator import evaluate_transcript
 
 def evaluate_full_transcript(transcript: str) -> dict:
     chunks = chunk_text(transcript)

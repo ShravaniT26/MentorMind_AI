@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 import json
 import os
-from src.backend.app.db.sessions_store import get_session
+from src.backend.app.upload_engine.db.sessions_store import get_session
 
 router = APIRouter(prefix="/api/v1/results", tags=["Results"])
 

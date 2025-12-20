@@ -4,15 +4,15 @@ from uuid import uuid4
 import os
 import shutil
 
-from src.backend.app.services.job_queue import enqueue_accessibility_job
-from src.backend.app.db.sessions_store import create_session
-from src.backend.app.services.video_scoring import compute_scores,compute_overall
-from src.backend.app.services.video_scoring import extract_features
-from src.backend.app.services.mode_blind import video_to_description
-from src.backend.app.services.mode_deaf import process_deaf_mode
-from src.backend.app.services.mode_easy import generate_easy_audio
-from src.backend.app.services.video_proccessor import save_upload_file
-from src.backend.app.utils.file_utils import save_upload_file
+from src.backend.app.upload_engine.services.job_queue import enqueue_accessibility_job
+from src.backend.app.upload_engine.db.sessions_store import create_session
+from src.backend.app.upload_engine.services.video_scoring import compute_scores,compute_overall
+from src.backend.app.upload_engine.services.video_scoring import extract_features
+from src.backend.app.upload_engine.services.mode_blind import video_to_description
+from src.backend.app.upload_engine.services.mode_deaf import process_deaf_mode
+from src.backend.app.upload_engine.services.mode_easy import generate_easy_audio
+from src.backend.app.upload_engine.services.video_proccessor import save_upload_file
+from src.backend.app.upload_engine.utils.file_utils import save_upload_file
 
 
 router = APIRouter()
