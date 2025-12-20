@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
-from app.core.security import create_access_token
+from backend.app.youtube_engine.core.security import create_access_token
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 

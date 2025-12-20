@@ -3,13 +3,13 @@ from fastapi.security import OAuth2PasswordRequestForm
 import uuid
 import time
 
-from app.core.security import (
+from app.youtube_engine.core.security import (
     authenticate_user,
     create_access_token,
     get_current_user
 )
-from app.evaluation.schemas import EvaluationRequest
-from app.evaluation.tasks import demo_score_from_url
+from app.youtube_engine.evaluation.schemas import EvaluationRequest
+from app.youtube_engine.evaluation.tasks import demo_score_from_url
 
 # -------------------------------
 # Routers
