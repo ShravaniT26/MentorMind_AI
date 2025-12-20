@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LogIn, UserPlus, Mail, Lock, User, Sparkles } from 'lucide-react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { useDarkMode } from '../contexts/DarkModeContext';
+import { authAPI } from '../utils/api';
 
 export function Login() {
   const [isSignup, setIsSignup] = useState(false);
@@ -10,22 +11,79 @@ export function Login() {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [role, setRole] = useState<'mentor' | 'student'>('mentor');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const { darkMode, toggleDarkMode } = useDarkMode();
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Mock login/signup - in real app, this would call backend API
-    console.log('Login/Signup:', { email, password, name, role });
+    setLoading(true);
+    setError('');
     
-    // Simulate successful login
-    localStorage.setItem('userRole', role);
-    localStorage.setItem('userName', name || email.split('@')[0]);
-    navigate('/home');
+    try {
+      if (isSignup) {
+        // Sign up
+        const response = await authAPI.signup(email, password, name, role);
+        console.log('Signup successful:', response);
+        
+        localStorage.setItem('userRole', role);
+        localStorage.setItem('userName', name);
+        
+        navigate('/home');
+      } else {
+        // Sign in
+        const response = await authAPI.signin(email, password);
+        console.log('Signin successful:', response);
+        
+        const userRole = response.user?.role || localStorage.getItem('userRole') || 'mentor';
+        const userName = response.user?.name || localStorage.getItem('userName') || email.split('@')[0];
+        
+        localStorage.setItem('userRole', userRole);
+        localStorage.setItem('userName', userName);
+        
+        navigate('/home');
+      }
+    } catch (err: any) {
+      console.error('Authentication error:', err);
+      setError(err.message || 'Authentication failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDemoLogin = async () => {
+    setLoading(true);
+    setError('');
+    
+    try {
+      // Create a demo account
+      const demoEmail = `demo.${Date.now()}@mentorvision.ai`;
+      const demoName = 'Demo Mentor';
+      const demoPassword = 'demo123';
+      
+      await authAPI.signup(demoEmail, demoPassword, demoName, 'mentor');
+      
+      localStorage.setItem('userRole', 'mentor');
+      localStorage.setItem('userName', demoName);
+      
+      navigate('/home');
+    } catch (err: any) {
+      console.error('Demo login error:', err);
+      setError('Demo login failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12">
+    <motion.div 
+      className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <div className="max-w-md w-full relative z-10">
         {/* Header */}
         <motion.div 
@@ -216,12 +274,24 @@ export function Login() {
               </div>
             </motion.div>
 
+            {/* Error Message */}
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg"
+              >
+                {error}
+              </motion.div>
+            )}
+
             {/* Submit Button */}
             <motion.button
               type="submit"
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg hover:shadow-2xl transition-all flex items-center justify-center gap-2 relative overflow-hidden group"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+              disabled={loading}
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg hover:shadow-2xl transition-all flex items-center justify-center gap-2 relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed"
+              whileHover={{ scale: loading ? 1 : 1.02 }}
+              whileTap={{ scale: loading ? 1 : 0.98 }}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
@@ -230,7 +300,16 @@ export function Login() {
                 className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity"
                 initial={false}
               />
-              {isSignup ? (
+              {loading ? (
+                <>
+                  <motion.div
+                    className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                  />
+                  Processing...
+                </>
+              ) : isSignup ? (
                 <>
                   <UserPlus className="w-5 h-5" />
                   Create Account
@@ -260,6 +339,23 @@ export function Login() {
               {isSignup 
                 ? 'Already have an account? Sign in' 
                 : "Don't have an account? Sign up"}
+            </button>
+          </motion.div>
+
+          {/* Demo Login */}
+          <motion.div 
+            className="mt-4 text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 }}
+          >
+            <button
+              onClick={handleDemoLogin}
+              className={`hover:underline transition-colors ${
+                darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'
+              }`}
+            >
+              Try a Demo Account
             </button>
           </motion.div>
         </motion.div>
@@ -297,6 +393,6 @@ export function Login() {
           </motion.div>
         </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }

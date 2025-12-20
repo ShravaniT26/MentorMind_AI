@@ -9,7 +9,7 @@ const mockLeaderboard = [
     rank: 1,
     name: 'Sarah Johnson',
     avatar: '👩‍🏫',
-    totalScore: 9.2,
+    totalScore: 0.92,
     points: 2850,
     badges: 12,
     improvement: '+18%',
@@ -19,7 +19,7 @@ const mockLeaderboard = [
     rank: 2,
     name: 'Michael Chen',
     avatar: '👨‍💼',
-    totalScore: 9.0,
+    totalScore: 0.90,
     points: 2720,
     badges: 11,
     improvement: '+15%',
@@ -29,7 +29,7 @@ const mockLeaderboard = [
     rank: 3,
     name: 'Emily Rodriguez',
     avatar: '👩‍🔬',
-    totalScore: 8.8,
+    totalScore: 0.88,
     points: 2650,
     badges: 10,
     improvement: '+22%',
@@ -39,7 +39,7 @@ const mockLeaderboard = [
     rank: 4,
     name: 'David Park',
     avatar: '👨‍🎓',
-    totalScore: 8.7,
+    totalScore: 0.87,
     points: 2580,
     badges: 9,
     improvement: '+12%',
@@ -49,7 +49,7 @@ const mockLeaderboard = [
     rank: 5,
     name: 'Lisa Anderson',
     avatar: '👩‍💻',
-    totalScore: 8.5,
+    totalScore: 0.85,
     points: 2490,
     badges: 10,
     improvement: '+20%',
@@ -59,7 +59,7 @@ const mockLeaderboard = [
     rank: 6,
     name: 'James Wilson',
     avatar: '👨‍🏫',
-    totalScore: 8.4,
+    totalScore: 0.84,
     points: 2410,
     badges: 8,
     improvement: '+14%',
@@ -69,7 +69,7 @@ const mockLeaderboard = [
     rank: 7,
     name: 'Maria Garcia',
     avatar: '👩‍⚕️',
-    totalScore: 8.3,
+    totalScore: 0.83,
     points: 2350,
     badges: 9,
     improvement: '+16%',
@@ -79,7 +79,7 @@ const mockLeaderboard = [
     rank: 8,
     name: 'Robert Taylor',
     avatar: '👨‍🔧',
-    totalScore: 8.2,
+    totalScore: 0.82,
     points: 2280,
     badges: 7,
     improvement: '+10%',
@@ -166,7 +166,7 @@ export function Leaderboard() {
             <span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>Avg Score</span>
             <TrendingUp className="w-5 h-5 text-green-600" />
           </div>
-          <div className={`text-3xl ${darkMode ? 'text-white font-bold' : 'text-gray-900'}`}>7.8</div>
+          <div className={`text-3xl ${darkMode ? 'text-white font-bold' : 'text-gray-900'}`}> 0.8</div>
         </motion.div>
         
         <motion.div 

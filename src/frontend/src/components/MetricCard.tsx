@@ -35,7 +35,7 @@ export function MetricCard({ metric }: MetricCardProps) {
   };
 
   const colors = getColorClasses(metric.color);
-  const percentage = (metric.score / 10) * 100;
+  const percentage = metric.score * 100; // Score is already 0-1, so multiply by 100 for percentage
 
   return (
     <motion.div 
@@ -67,8 +67,8 @@ export function MetricCard({ metric }: MetricCardProps) {
           </div>
         </div>
         <div className={`text-3xl ${colors.text}`}>
-          {metric.score}
-          <span className="text-lg">/10</span>
+          {metric.score.toFixed(2)}
+          <span className="text-lg">/1.0</span>
         </div>
       </div>
 

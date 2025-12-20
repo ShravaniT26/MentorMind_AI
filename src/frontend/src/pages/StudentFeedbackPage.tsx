@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MessageSquare, Send, Heart, Volume2, ThumbsUp, Star } from 'lucide-react';
+import { MessageSquare, Heart, Volume2, ThumbsUp, Star, Eye, Ear } from 'lucide-react';
 import { useDarkMode } from '../contexts/DarkModeContext';
 import { motion } from 'framer-motion';
 
@@ -9,30 +9,33 @@ interface FeedbackItem {
   avatar: string;
   feedback: string;
   category: 'appreciation' | 'accessibility' | 'suggestion';
+  accessibilityType?: 'deaf' | 'blind' | 'general';
   timestamp: string;
   sessionId: string;
   rating: number;
 }
 
-// Mock student feedback data
+// Mock student feedback data - Prioritizing accessibility feedback
 const mockFeedbacks: FeedbackItem[] = [
   {
     id: 1,
-    studentName: 'Priya Sharma',
-    avatar: '👩‍🎓',
-    feedback: 'Thank you for explaining in Hindi! It was really helpful for me to understand the complex topics better. Your bilingual approach makes learning so much easier.',
-    category: 'appreciation',
+    studentName: 'Sneha Reddy',
+    avatar: '👩‍🔬',
+    feedback: 'As a deaf student, the captions feature is a lifesaver! However, sometimes technical terms are not captioned correctly. The visual explanations on the board are excellent and help me understand without relying on audio.',
+    category: 'accessibility',
+    accessibilityType: 'deaf',
     timestamp: '2 hours ago',
     sessionId: 'abc123',
-    rating: 5
+    rating: 4
   },
   {
     id: 2,
     studentName: 'Rahul Kumar',
     avatar: '👨‍💼',
-    feedback: "I can't watch your lecture due to visual impairment, but with the audio clarity feature, I am able to hear everything clearly. Your explanations are very detailed and easy to follow through audio alone.",
+    feedback: "I'm a blind student and can't watch your lecture visually, but the audio clarity feature is amazing! Your detailed verbal descriptions of diagrams and visual content help me follow along. Could you please describe whiteboard content more often?",
     category: 'accessibility',
-    timestamp: '5 hours ago',
+    accessibilityType: 'blind',
+    timestamp: '3 hours ago',
     sessionId: 'def456',
     rating: 5
   },
@@ -40,66 +43,73 @@ const mockFeedbacks: FeedbackItem[] = [
     id: 3,
     studentName: 'Anjali Patel',
     avatar: '👩‍💻',
-    feedback: 'In the last video, I was not able to hear your voice clearly during the middle section. Could you please check your microphone settings? This session was much better though!',
-    category: 'suggestion',
-    timestamp: '1 day ago',
+    feedback: 'Being hearing-impaired, I rely heavily on captions. Your recent videos have much better caption quality - they sync perfectly with your speech. The simplified vocabulary in Easy Mode captions makes complex topics easier to understand!',
+    category: 'accessibility',
+    accessibilityType: 'deaf',
+    timestamp: '5 hours ago',
     sessionId: 'ghi789',
-    rating: 4
+    rating: 5
   },
   {
     id: 4,
     studentName: 'Vikram Singh',
     avatar: '👨‍🎓',
-    feedback: 'The pace of explanation was perfect! Not too fast, not too slow. The captions also helped me take better notes. Thank you!',
-    category: 'appreciation',
+    feedback: 'As someone with low vision, the high-contrast slides and large text you use are incredibly helpful. The audio descriptions of graphs and charts are excellent. This makes learning accessible for everyone!',
+    category: 'accessibility',
+    accessibilityType: 'blind',
     timestamp: '1 day ago',
     sessionId: 'jkl012',
     rating: 5
   },
   {
     id: 5,
-    studentName: 'Sneha Reddy',
-    avatar: '👩‍🔬',
-    feedback: 'As a hearing-impaired student, the captions feature is a lifesaver. However, sometimes the technical terms are not captioned correctly. Maybe you could speak them more clearly?',
-    category: 'suggestion',
-    timestamp: '2 days ago',
+    studentName: 'Priya Sharma',
+    avatar: '👩‍🎓',
+    feedback: 'I appreciate how you explain concepts in both English and Hindi. The bilingual approach with proper captions in both languages helps me and my deaf classmates understand complex topics much better. Your inclusive teaching style is wonderful!',
+    category: 'accessibility',
+    accessibilityType: 'deaf',
+    timestamp: '1 day ago',
     sessionId: 'mno345',
-    rating: 4
+    rating: 5
   },
   {
     id: 6,
     studentName: 'Arjun Mehta',
     avatar: '👨‍💻',
-    feedback: 'Your use of real-world examples makes everything so relatable! I finally understood the concept that I was struggling with for weeks.',
+    feedback: 'Your use of real-world examples makes everything so relatable! I finally understood the concept I was struggling with for weeks. The pace of explanation was perfect too!',
     category: 'appreciation',
+    accessibilityType: 'general',
     timestamp: '2 days ago',
     sessionId: 'pqr678',
     rating: 5
+  },
+  {
+    id: 7,
+    studentName: 'Meera Iyer',
+    avatar: '👩‍⚕️',
+    feedback: 'Could you please add timestamps in the video description? As a student who uses screen readers, this would help me navigate to specific sections more easily. Also, describing code on screen would be very helpful!',
+    category: 'suggestion',
+    accessibilityType: 'blind',
+    timestamp: '2 days ago',
+    sessionId: 'stu901',
+    rating: 4
+  },
+  {
+    id: 8,
+    studentName: 'Karan Desai',
+    avatar: '👨‍🎨',
+    feedback: 'The color coding in your diagrams is great, but please also use patterns or labels. Being colorblind, I sometimes miss the distinctions between similar colors. Adding text labels would help immensely!',
+    category: 'suggestion',
+    accessibilityType: 'general',
+    timestamp: '3 days ago',
+    sessionId: 'vwx234',
+    rating: 4
   }
 ];
 
 export function StudentFeedbackPage() {
   const [filterCategory, setFilterCategory] = useState<'all' | 'appreciation' | 'accessibility' | 'suggestion'>('all');
-  const [newFeedback, setNewFeedback] = useState('');
-  const [rating, setRating] = useState(1);
   const darkMode = useDarkMode();
-
-  const handleSubmitFeedback = (e: React.FormEvent) => {
-    e.preventDefault();
-    const newFeedbackItem: FeedbackItem = {
-      id: mockFeedbacks.length + 1,
-      studentName: 'Anonymous',
-      avatar: '👤',
-      feedback: newFeedback,
-      category: 'suggestion',
-      timestamp: 'just now',
-      sessionId: 'newSession',
-      rating: rating
-    };
-    mockFeedbacks.push(newFeedbackItem);
-    setNewFeedback('');
-    setRating(1);
-  };
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
@@ -145,7 +155,7 @@ export function StudentFeedbackPage() {
     : mockFeedbacks.filter(f => f.category === filterCategory);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 bg-[rgba(1,1,1,0)]">
       {/* Header */}
       <motion.div 
         className="text-center mb-12"
@@ -154,121 +164,79 @@ export function StudentFeedbackPage() {
         transition={{ duration: 0.5 }}
       >
         <div className="flex justify-center items-center gap-3 mb-4">
-          <MessageSquare className={`w-12 h-12 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
-          <h1 className={`text-4xl md:text-5xl ${
-            darkMode ? 'text-white font-bold drop-shadow-lg' : 'text-gray-900'
+          <MessageSquare className={`w-10 h-10 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
+          <h1 className={`text-3xl md:text-4xl ${
+            darkMode ? 'text-white font-bold drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]' : 'text-gray-900 font-bold'
           }`}>
             Student Feedback
           </h1>
         </div>
-        <p className={`text-lg md:text-xl ${
-          darkMode ? 'text-gray-300 font-medium' : 'text-gray-600'
+        <p className={`${
+          darkMode ? 'text-[#B8BACC] font-medium' : 'text-gray-600 font-medium'
         }`}>
           View student feedback and insights to help improve your teaching approach
         </p>
       </motion.div>
 
-      {/* Submit Feedback Form */}
-      <motion.div 
-        className={`rounded-xl shadow-md p-8 mb-8 ${
-          darkMode ? 'bg-gray-800/50 backdrop-blur-sm border border-gray-700/50' : 'bg-white shadow-[inset_0_1px_3px_rgba(0,0,0,0.05)] border border-gray-200'
+      {/* Accessibility Priority Banner */}
+      <motion.div
+        className={`rounded-xl p-6 mb-8 shadow-[0_4px_10px_rgba(0,0,0,0.15)] ${
+          darkMode
+            ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30'
+            : 'bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 border border-blue-300'
         }`}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, delay: 0.1 }}
       >
-        <h2 className={`text-2xl mb-6 ${darkMode ? 'text-white font-semibold' : 'text-gray-900 font-semibold'}`}>
-          Submit Your Feedback
-        </h2>
-        <form onSubmit={handleSubmitFeedback}>
-          <div className="mb-6">
-            <label className={`block mb-3 text-base ${darkMode ? 'text-gray-300' : 'text-gray-800 font-medium'}`}>
-              Rate Your Experience
-            </label>
-            <div className="flex gap-3">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <motion.button
-                  key={star}
-                  type="button"
-                  onClick={() => setRating(star)}
-                  className={`transition-all duration-150 rounded-lg p-2 ${
-                    star <= rating 
-                      ? 'bg-yellow-50' 
-                      : darkMode 
-                      ? 'hover:bg-gray-700/50' 
-                      : 'hover:bg-gray-100'
-                  }`}
-                  whileHover={{ scale: 1.2 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <Star
-                    className={`w-10 h-10 ${
-                      star <= rating 
-                        ? 'fill-yellow-400 text-yellow-400 drop-shadow-sm' 
-                        : darkMode 
-                        ? 'text-gray-600 hover:text-gray-500' 
-                        : 'text-gray-300 hover:text-gray-400'
-                    }`}
-                  />
-                </motion.button>
-              ))}
-            </div>
+        <div className="flex items-center gap-4">
+          <div className="flex gap-2">
+            <Ear className={`w-8 h-8 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
+            <Eye className={`w-8 h-8 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`} />
           </div>
-
-          <div className="mb-6">
-            <label className={`block mb-3 text-base ${darkMode ? 'text-gray-300' : 'text-gray-800 font-medium'}`}>
-              Your Feedback
-            </label>
-            <textarea
-              value={newFeedback}
-              onChange={(e) => setNewFeedback(e.target.value)}
-              placeholder="Share what you liked, what helped you learn, or suggestions for improvement..."
-              className={`w-full p-4 rounded-lg min-h-32 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                darkMode 
-                  ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                  : 'border-2 border-gray-300 hover:border-gray-400 focus:shadow-lg placeholder-gray-500'
-              }`}
-              required
-            />
+          <div className="flex-1">
+            <h3 className={`mb-1 flex items-center gap-2 ${darkMode ? 'text-white font-bold' : 'text-gray-900 font-bold'}`}>
+              🎯 Accessibility Feedback Prioritized
+            </h3>
+            <p className={`text-sm ${darkMode ? 'text-[#B8BACC]' : 'text-gray-600'}`}>
+              Showing feedback from <span className="font-semibold">Deaf Students</span> and <span className="font-semibold">Blind Students</span> to help you create more inclusive content
+            </p>
           </div>
-
-          <motion.button
-            type="submit"
-            className={`flex items-center gap-2 px-8 py-3.5 rounded-lg transition-all duration-200 shadow-md ${
-              darkMode
-                ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:shadow-2xl hover:shadow-purple-500/50 hover:scale-105'
-                : 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105 hover:-translate-y-0.5'
-            }`}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Send className="w-5 h-5" />
-            <span className="font-medium">Submit Feedback</span>
-          </motion.button>
-        </form>
+          <div className={`px-4 py-2 rounded-lg text-center ${
+            darkMode ? 'bg-blue-500/30 text-blue-300 border border-blue-400/30' : 'bg-blue-100 text-blue-800 border border-blue-300'
+          }`}>
+            <div className="font-bold text-xl">{mockFeedbacks.filter(f => f.category === 'accessibility').length}</div>
+            <div className="text-xs">Priority Items</div>
+          </div>
+        </div>
       </motion.div>
 
       {/* Filter Buttons */}
       <motion.div 
-        className={`rounded-xl shadow-md p-5 mb-8 ${
-          darkMode ? 'bg-gray-800/50 backdrop-blur-sm border border-gray-700/50' : 'bg-white shadow-[inset_0_1px_3px_rgba(0,0,0,0.05)] border border-gray-200'
+        className={`rounded-xl p-6 mb-8 shadow-[0_4px_10px_rgba(0,0,0,0.15)] ${
+          darkMode 
+            ? 'bg-white/[0.03] backdrop-blur-sm border border-white/[0.08]' 
+            : 'bg-white backdrop-blur-sm border border-gray-200'
         }`}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
         <div className="flex flex-wrap gap-3 items-center">
-          <span className={`font-medium ${darkMode ? 'text-gray-300' : 'text-gray-800'}`}>Filter by:</span>
+          <span className={`font-semibold flex items-center gap-2 ${darkMode ? 'text-[#E8E9F0]' : 'text-gray-800'}`}>
+            <MessageSquare className="w-5 h-5" />
+            Filter by:
+          </span>
           <motion.button
             onClick={() => setFilterCategory('all')}
-            className={`px-5 py-2.5 rounded-full transition-all duration-200 font-medium shadow-sm ${
+            className={`px-4 py-2 rounded-lg transition-all duration-200 font-medium shadow-[0_4px_6px_rgba(0,0,0,0.2)] ${
               filterCategory === 'all'
                 ? darkMode
-                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30'
-                  : 'bg-blue-600 text-white shadow-md hover:shadow-lg'
+                  ? 'bg-blue-600 text-white shadow-[0_6px_12px_rgba(59,130,246,0.4)]'
+                  : 'bg-blue-600 text-white shadow-[0_6px_12px_rgba(59,130,246,0.5)]'
                 : darkMode
-                ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                : 'bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200 hover:border-gray-400'
+                ? 'bg-white/[0.05] text-[#B8BACC] hover:bg-white/[0.08] hover:text-white border border-white/[0.08] hover:shadow-[0_6px_10px_rgba(0,0,0,0.25)]'
+                : 'bg-gradient-to-br from-gray-50 to-gray-100 text-gray-700 border border-gray-300 hover:bg-gradient-to-br hover:from-gray-100 hover:to-gray-200 hover:border-gray-400 hover:shadow-[0_6px_10px_rgba(0,0,0,0.25)]'
             }`}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -277,14 +245,14 @@ export function StudentFeedbackPage() {
           </motion.button>
           <motion.button
             onClick={() => setFilterCategory('appreciation')}
-            className={`px-5 py-2.5 rounded-full transition-all duration-200 flex items-center gap-2 font-medium shadow-sm ${
+            className={`px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 font-medium shadow-[0_4px_6px_rgba(0,0,0,0.2)] ${
               filterCategory === 'appreciation'
                 ? darkMode
-                  ? 'bg-pink-600 text-white shadow-lg shadow-pink-500/30'
-                  : 'bg-pink-600 text-white shadow-md hover:shadow-lg'
+                  ? 'bg-pink-600 text-white shadow-[0_6px_12px_rgba(219,39,119,0.4)]'
+                  : 'bg-pink-600 text-white shadow-[0_6px_12px_rgba(219,39,119,0.5)]'
                 : darkMode
-                ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                : 'bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200 hover:border-gray-400'
+                ? 'bg-white/[0.05] text-[#B8BACC] hover:bg-white/[0.08] hover:text-white border border-white/[0.08] hover:shadow-[0_6px_10px_rgba(0,0,0,0.25)]'
+                : 'bg-gradient-to-br from-pink-50 to-pink-100 text-pink-700 border border-pink-300 hover:bg-gradient-to-br hover:from-pink-100 hover:to-pink-200 hover:border-pink-400 hover:shadow-[0_6px_10px_rgba(0,0,0,0.25)]'
             }`}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -294,14 +262,14 @@ export function StudentFeedbackPage() {
           </motion.button>
           <motion.button
             onClick={() => setFilterCategory('accessibility')}
-            className={`px-5 py-2.5 rounded-full transition-all duration-200 flex items-center gap-2 font-medium shadow-sm ${
+            className={`px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 font-medium shadow-[0_4px_6px_rgba(0,0,0,0.2)] ${
               filterCategory === 'accessibility'
                 ? darkMode
-                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30'
-                  : 'bg-blue-600 text-white shadow-md hover:shadow-lg'
+                  ? 'bg-blue-600 text-white shadow-[0_6px_12px_rgba(59,130,246,0.4)]'
+                  : 'bg-blue-600 text-white shadow-[0_6px_12px_rgba(59,130,246,0.5)]'
                 : darkMode
-                ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                : 'bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200 hover:border-gray-400'
+                ? 'bg-white/[0.05] text-[#B8BACC] hover:bg-white/[0.08] hover:text-white border border-white/[0.08] hover:shadow-[0_6px_10px_rgba(0,0,0,0.25)]'
+                : 'bg-gradient-to-br from-blue-50 to-blue-100 text-blue-700 border border-blue-300 hover:bg-gradient-to-br hover:from-blue-100 hover:to-blue-200 hover:border-blue-400 hover:shadow-[0_6px_10px_rgba(0,0,0,0.25)]'
             }`}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -311,14 +279,14 @@ export function StudentFeedbackPage() {
           </motion.button>
           <motion.button
             onClick={() => setFilterCategory('suggestion')}
-            className={`px-5 py-2.5 rounded-full transition-all duration-200 flex items-center gap-2 font-medium shadow-sm ${
+            className={`px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 font-medium shadow-[0_4px_6px_rgba(0,0,0,0.2)] ${
               filterCategory === 'suggestion'
                 ? darkMode
-                  ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/30'
-                  : 'bg-purple-600 text-white shadow-md hover:shadow-lg'
+                  ? 'bg-purple-600 text-white shadow-[0_6px_12px_rgba(147,51,234,0.4)]'
+                  : 'bg-purple-600 text-white shadow-[0_6px_12px_rgba(147,51,234,0.5)]'
                 : darkMode
-                ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                : 'bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200 hover:border-gray-400'
+                ? 'bg-white/[0.05] text-[#B8BACC] hover:bg-white/[0.08] hover:text-white border border-white/[0.08] hover:shadow-[0_6px_10px_rgba(0,0,0,0.25)]'
+                : 'bg-gradient-to-br from-purple-50 to-purple-100 text-purple-700 border border-purple-300 hover:bg-gradient-to-br hover:from-purple-100 hover:to-purple-200 hover:border-purple-400 hover:shadow-[0_6px_10px_rgba(0,0,0,0.25)]'
             }`}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -332,78 +300,81 @@ export function StudentFeedbackPage() {
       {/* Feedback Stats */}
       <div className="grid md:grid-cols-3 gap-6 mb-8">
         <motion.div 
-          className={`rounded-xl shadow-md p-6 text-center transition-all duration-200 ${
+          className={`rounded-xl p-6 text-center transition-all duration-200 shadow-[0_4px_10px_rgba(0,0,0,0.15)] ${
             darkMode 
-              ? 'bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 hover:shadow-lg hover:shadow-pink-500/20' 
-              : 'bg-white border border-gray-200 hover:shadow-lg'
+              ? 'bg-white/[0.03] backdrop-blur-sm border border-white/[0.08] hover:bg-white/[0.05] hover:border-pink-500/30 hover:shadow-[0_6px_14px_rgba(0,0,0,0.2)]' 
+              : 'bg-gradient-to-br from-pink-50 to-white border border-pink-200 hover:shadow-[0_8px_20px_rgba(219,39,119,0.25)] hover:border-pink-300'
           }`}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.3 }}
           whileHover={{ scale: 1.05, y: -5 }}
         >
-          <Heart className={`w-8 h-8 mx-auto mb-2 ${darkMode ? 'text-pink-400' : 'text-pink-600'}`} />
-          <div className={`text-3xl mb-1 ${darkMode ? 'text-white font-bold' : 'text-gray-900 font-bold'}`}>
+          <Heart className={`w-8 h-8 mx-auto mb-3 ${darkMode ? 'text-pink-400' : 'text-pink-600'}`} />
+          <div className={`text-2xl mb-1 ${darkMode ? 'text-pink-300 font-bold' : 'text-gray-900 font-bold'}`}>
             {mockFeedbacks.filter(f => f.category === 'appreciation').length}
           </div>
-          <p className={`font-medium ${darkMode ? 'text-gray-400' : 'text-gray-700'}`}>Appreciations</p>
+          <p className={`font-semibold ${darkMode ? 'text-[#4B4F60]' : 'text-gray-700'}`}>Appreciations</p>
         </motion.div>
         <motion.div 
-          className={`rounded-xl shadow-md p-6 text-center transition-all duration-200 ${
+          className={`rounded-xl p-6 text-center transition-all duration-200 shadow-[0_4px_10px_rgba(0,0,0,0.15)] ${
             darkMode 
-              ? 'bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 hover:shadow-lg hover:shadow-blue-500/20' 
-              : 'bg-white border border-gray-200 hover:shadow-lg'
+              ? 'bg-white/[0.03] backdrop-blur-sm border border-white/[0.08] hover:bg-white/[0.05] hover:border-blue-500/30 hover:shadow-[0_6px_14px_rgba(0,0,0,0.2)]' 
+              : 'bg-gradient-to-br from-blue-50 to-white border border-blue-200 hover:shadow-[0_8px_20px_rgba(59,130,246,0.25)] hover:border-blue-300'
           }`}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.4 }}
           whileHover={{ scale: 1.05, y: -5 }}
         >
-          <Volume2 className={`w-8 h-8 mx-auto mb-2 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
-          <div className={`text-3xl mb-1 ${darkMode ? 'text-white font-bold' : 'text-gray-900 font-bold'}`}>
+          <Volume2 className={`w-8 h-8 mx-auto mb-3 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
+          <div className={`text-2xl mb-1 ${darkMode ? 'text-blue-300 font-bold' : 'text-gray-900 font-bold'}`}>
             {mockFeedbacks.filter(f => f.category === 'accessibility').length}
           </div>
-          <p className={`font-medium ${darkMode ? 'text-gray-400' : 'text-gray-700'}`}>Accessibility Mentions</p>
+          <p className={`font-semibold ${darkMode ? 'text-[#4B4F60]' : 'text-gray-700'}`}>Accessibility Mentions</p>
         </motion.div>
         <motion.div 
-          className={`rounded-xl shadow-md p-6 text-center transition-all duration-200 ${
+          className={`rounded-xl p-6 text-center transition-all duration-200 shadow-[0_4px_10px_rgba(0,0,0,0.15)] ${
             darkMode 
-              ? 'bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 hover:shadow-lg hover:shadow-purple-500/20' 
-              : 'bg-white border border-gray-200 hover:shadow-lg'
+              ? 'bg-white/[0.03] backdrop-blur-sm border border-white/[0.08] hover:bg-white/[0.05] hover:border-purple-500/30 hover:shadow-[0_6px_14px_rgba(0,0,0,0.2)]' 
+              : 'bg-gradient-to-br from-purple-50 to-white border border-purple-200 hover:shadow-[0_8px_20px_rgba(147,51,234,0.25)] hover:border-purple-300'
           }`}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.5 }}
           whileHover={{ scale: 1.05, y: -5 }}
         >
-          <ThumbsUp className={`w-8 h-8 mx-auto mb-2 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`} />
-          <div className={`text-3xl mb-1 ${darkMode ? 'text-white font-bold' : 'text-gray-900 font-bold'}`}>
+          <ThumbsUp className={`w-8 h-8 mx-auto mb-3 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`} />
+          <div className={`text-2xl mb-1 ${darkMode ? 'text-purple-300 font-bold' : 'text-gray-900 font-bold'}`}>
             {mockFeedbacks.filter(f => f.category === 'suggestion').length}
           </div>
-          <p className={`font-medium ${darkMode ? 'text-gray-400' : 'text-gray-700'}`}>Suggestions</p>
+          <p className={`font-semibold ${darkMode ? 'text-[#4B4F60]' : 'text-gray-700'}`}>Suggestions</p>
         </motion.div>
       </div>
 
       {/* Feedback List */}
       <motion.div 
-        className={`rounded-xl shadow-md p-8 ${
-          darkMode ? 'bg-gray-800/50 backdrop-blur-sm border border-gray-700/50' : 'bg-white'
+        className={`rounded-xl p-8 shadow-[0_4px_10px_rgba(0,0,0,0.15)] ${
+          darkMode 
+            ? 'bg-white/[0.03] backdrop-blur-sm border border-white/[0.08]' 
+            : 'bg-white backdrop-blur-sm border border-gray-200'
         }`}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.6 }}
       >
-        <h2 className={`text-2xl mb-6 ${darkMode ? 'text-white font-semibold' : 'text-gray-900'}`}>
+        <h2 className={`mb-6 flex items-center gap-3 ${darkMode ? 'text-[#E8E9F0] font-semibold' : 'text-gray-900 font-bold'}`}>
+          <MessageSquare className={`w-6 h-6 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
           Recent Feedback
         </h2>
         <div className="space-y-4">
           {filteredFeedbacks.map((feedback, index) => (
             <motion.div
               key={feedback.id}
-              className={`rounded-xl p-5 transition-all duration-200 ${
+              className={`rounded-xl p-6 transition-all duration-200 shadow-[0_4px_10px_rgba(0,0,0,0.15)] ${
                 darkMode 
-                  ? 'border border-gray-700 hover:bg-gray-700/30 hover:shadow-lg' 
-                  : 'border border-gray-200 hover:shadow-md'
+                  ? 'bg-white/[0.02] border border-white/[0.08] hover:bg-white/[0.04] hover:border-white/[0.12] hover:shadow-[0_6px_14px_rgba(0,0,0,0.2)]' 
+                  : 'bg-gradient-to-br from-white to-gray-50 border border-gray-200 hover:shadow-[0_8px_18px_rgba(0,0,0,0.2)] hover:border-gray-300 hover:from-gray-50 hover:to-gray-100'
               }`}
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -411,26 +382,42 @@ export function StudentFeedbackPage() {
               whileHover={{ scale: 1.01, x: 5 }}
             >
               <div className="flex items-start gap-4">
-                <div className="text-4xl">{feedback.avatar}</div>
+                <div className="text-3xl">{feedback.avatar}</div>
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
-                    <h4 className={darkMode ? 'text-white font-medium' : 'text-gray-900'}>
+                    <h4 className={darkMode ? 'text-[#E8E9F0] font-medium' : 'text-gray-900 font-semibold'}>
                       {feedback.studentName}
                     </h4>
                     <span className={`px-3 py-1 rounded-full text-xs flex items-center gap-1 ${getCategoryBadge(feedback.category)}`}>
                       {getCategoryIcon(feedback.category)}
                       {getCategoryLabel(feedback.category)}
                     </span>
+                    {feedback.accessibilityType === 'deaf' && (
+                      <span className={`px-2 py-1 rounded text-xs flex items-center gap-1 ${
+                        darkMode ? 'bg-blue-500/30 text-blue-300 border border-blue-400/30' : 'bg-blue-100 text-blue-700 border border-blue-300'
+                      }`}>
+                        <Ear className="w-3 h-3" />
+                        Deaf Student
+                      </span>
+                    )}
+                    {feedback.accessibilityType === 'blind' && (
+                      <span className={`px-2 py-1 rounded text-xs flex items-center gap-1 ${
+                        darkMode ? 'bg-purple-500/30 text-purple-300 border border-purple-400/30' : 'bg-purple-100 text-purple-700 border border-purple-300'
+                      }`}>
+                        <Eye className="w-3 h-3" />
+                        Blind Student
+                      </span>
+                    )}
                     <div className="flex gap-1 ml-auto">
                       {[...Array(feedback.rating)].map((_, i) => (
                         <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                       ))}
                     </div>
                   </div>
-                  <p className={`leading-relaxed mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  <p className={`leading-relaxed mb-2 ${darkMode ? 'text-[#2C2E48]' : 'text-gray-700'}`}>
                     {feedback.feedback}
                   </p>
-                  <div className={`flex items-center gap-3 text-sm ${darkMode ? 'text-gray-500' : 'text-gray-500'}`}>
+                  <div className={`flex items-center gap-3 text-sm ${darkMode ? 'text-[#6B6E7E]' : 'text-gray-500'}`}>
                     <span>{feedback.timestamp}</span>
                     <span>•</span>
                     <span>Session: {feedback.sessionId}</span>

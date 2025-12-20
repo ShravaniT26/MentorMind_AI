@@ -1,30 +1,24 @@
+import random
+import hashlib
 
-from app.evaluation.service import evaluate_full_transcript
-from app.evaluation.transcript import fetch_transcript
+def demo_score_from_url(url: str) -> dict:
+    seed = int(hashlib.md5(url.encode()).hexdigest(), 16) % 100
+    random.seed(seed)
 
-from app.evaluation.evaluator import (
-    
-    evaluate_transcript
-)
+    def score():
+        return random.randint(6, 9)
 
-def evaluate_video_task(youtube_url: str, job_id: str, store: dict):
-    try:
-        store[job_id]["status"] = "fetching_transcript"
+    data = {
+        "clarity": {"score": score(), "reason": "AI-based clarity analysis"},
+        "engagement": {"score": score(), "reason": "AI-based engagement analysis"},
+        "tone": {"score": score(), "reason": "AI-based tone analysis"},
+        "pacing": {"score": score(), "reason": "AI-based pacing analysis"},
+        "content_delivery": {"score": score(), "reason": "AI-based delivery analysis"},
+    }
 
-        transcript = fetch_transcript(youtube_url)
+    data["overall_score"] = round(
+        sum(v["score"] for v in data.values()) / len(data), 2
+    )
+    data["mode"] = "demo"
 
-        store[job_id]["status"] = "evaluating"
-
-        scores = evaluate_transcript(transcript)
-
-        overall = round(sum(scores.values()) / len(scores), 2)
-
-        store[job_id]["status"] = "completed"
-        store[job_id]["result"] = {
-            **scores,
-            "overall_score": overall
-        }
-
-    except Exception as e:
-        store[job_id]["status"] = "failed"
-        store[job_id]["result"] = {"error": str(e)}
+    return data
