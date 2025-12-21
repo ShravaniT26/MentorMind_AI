@@ -1,59 +1,73 @@
 MentorMindAI – Smart Video Evaluation & Accessibility Engine
 
-MentorMindAI is an AI-powered backend that evaluates videos for teaching quality and also converts videos into different accessibility modes—Blind Mode, Deaf Mode, and Easy Mode.
-This system uses ONNX machine-learning models for scoring and FastAPI for serving all endpoints.
+MentorMindAI is an AI-powered backend system that evaluates teaching quality from recorded videos and converts videos into multiple accessibility modes — Blind Mode, Deaf Mode, and Easy Mode.
+
+The platform leverages ONNX machine-learning models, FastAPI, and asynchronous processing to deliver scalable, reproducible, and fair video evaluations.
 
 🚀 Project Overview
 
-This project provides two major functionalities:
+MentorMindAI provides two core capabilities:
 
-1. Video Scoring System (AI Evaluation)
+1️⃣ Video Scoring System (AI Evaluation)
 
-Uploads a video and returns:
+Upload a mentor’s teaching video and receive objective evaluation scores for:
 
--Clarity score
--Engagement score
--Pace score
--Filler word score
--Technical depth score
--Weighted overall score
+Clarity
 
-Models used:
+Engagement
 
--clarity_model.onnx
--engagement_cnn.onnx
--pace_model.onnx
--filler_model.onnx
--tech_depth_model.onnx
+Pace
 
-2. Accessibility Modes
+Filler Word Usage
 
-Convert any uploaded video into:
+Technical Depth
 
-Blind Mode
+Weighted Overall Score
 
-Generates audio narration of the video content.
+🧠 Models Used (ONNX)
 
-Deaf Mode
+clarity_model.onnx
 
-Generates subtitles using Whisper STT.
+engagement_cnn.onnx
 
-Easy Mode
+pace_model.onnx
 
-Simplified narration using text summarization + TTS.
+filler_model.onnx
+
+tech_depth_model.onnx
+
+Each model focuses on a specific teaching metric and contributes to a deterministic final score.
+
+2️⃣ Accessibility Modes
+
+Convert uploaded videos into inclusive formats for diverse learners:
+
+🔊 Blind Mode
+
+Generates audio narration of visual and spoken content
+
+📝 Deaf Mode
+
+Generates subtitles (.srt) using Whisper Speech-to-Text
+
+📖 Easy Mode
+
+Produces simplified narration
+
+Uses text summarization + Text-to-Speech (TTS)
 
 🧱 Project Architecture Overview
 📦 MentorMindAI
  ┣ backend/
  │ ┣ app/
  │ │ ┣ api/v1/
- │ │ │ ┣ routes_upload.py      → Upload & mode conversion APIs
+ │ │ │ ┣ routes_upload.py      → Upload & conversion APIs
  │ │ ┣ services/
  │ │ │ ┣ video_scoring.py      → ONNX scoring engine
  │ │ │ ┣ mode_blind.py         → Blind mode processing
  │ │ │ ┣ mode_deaf.py          → Deaf mode (subtitles)
- │ │ │ ┣ mode_easy.py          → Easy mode audio
- │ │ │ ┣ video_processor.py    → File handling utils
+ │ │ │ ┣ mode_easy.py          → Easy mode narration
+ │ │ │ ┣ video_processor.py    → Video & audio utilities
  │ │ ┣ main.py                 → FastAPI entry point
  ┣ models/
  │ ┣ clarity_model.onnx
@@ -65,54 +79,49 @@ Simplified narration using text summarization + TTS.
  ┣ README.md
  ┣ requirements.txt
 
-
+🧠 System Architecture Flow
                         ┌──────────────────────────────┐
                         │          Frontend            │
                         │        (React + Vite)        │
-                        │ ─ File Upload (Video)        │
-                        │ ─ Show Results Dashboard     │
-                        │ ─ Accessibility UI           │
+                        │ ─ Video Upload               │
+                        │ ─ Results Dashboard          │
+                        │ ─ Accessibility Controls     │
                         └───────────────▲──────────────┘
                                         │
-                                        │  HTTP (REST)
+                                        │ REST API
                                         │
                         ┌───────────────┴──────────────┐
                         │           FastAPI API         │
-                        │        /api/v1/score          │
-                        │        /api/v1/results/{id}   │
-                        │        /api/v1/upload         │
+                        │   /api/v1/upload              │
+                        │   /api/v1/score               │
+                        │   /api/v1/convert             │
                         └───────────────▲──────────────┘
                                         │
-                   Upload Video ┌───────┴────────┐ Queue Job
-                                │                │
+                          Upload Video  │   Queue Task
+                                ┌───────┴────────┐
                                 ▼                ▼
                    ┌─────────────────┐   ┌─────────────────┐
-                   │     AWS S3      │   │      Redis       │
-                   │   Storage Bucket│   │  Task Queue      │
+                   │     Storage     │   │      Redis       │
+                   │ (Local / S3)    │   │  Task Queue      │
                    └───────▲─────────┘   └─────────▲───────┘
                            │                       │
-                           │ Fetch video           │ Celery Task
+                           │ Fetch video           │ Background Job
                            │                       │
                     ┌──────┴───────────────────────┴─────┐
-                    │             Celery Worker            │
-                    │ ─ Audio Extraction (librosa)         │
-                    │ ─ Transcript (ASR)                   │
-                    │ ─ Frame Sampling                     │
-                    │ ─ ONNX Model Inference:              │
-                    │       • clarity_model.onnx           │
-                    │       • engagement_cnn.onnx          │
-                    │       • pace_estimator.onnx          │
-                    │       • filler_detector.onnx         │
-                    │       • tech_score_model.onnx        │
-                    │ ─ Scoring Engine                     │
-                    │ ─ Save Final JSON Output             │
-                    └─────────▲────────────────────────────┘
+                    │           Worker Engine              │
+                    │ ─ Audio Extraction                  │
+                    │ ─ Transcript (Whisper ASR)          │
+                    │ ─ Frame & Feature Extraction        │
+                    │ ─ ONNX Model Inference              │
+                    │ ─ Deterministic Scoring              │
+                    │ ─ Accessibility Mode Generation     │
+                    └─────────▲──────────────────────────┘
                               │
-                              │ Writes result
+                              │ Store results
                               │
                      ┌────────┴────────┐
                      │   Results Store │
-                     │  (DB / JSON)    │
+                     │ (DB / JSON)     │
                      └────────▲────────┘
                               │
                     Frontend Fetches Final Results
@@ -120,104 +129,108 @@ Simplified narration using text summarization + TTS.
                               ▼
                     ┌───────────────────┐
                     │ Results Dashboard │
-                    │ Graphs + Badges   │
-                    │ Accessibility Modes│
+                    │ Scores + Graphs   │
+                    │ Accessibility     │
                     └───────────────────┘
 
-
 ⚙️ Setup Instructions
-1. Clone the repository
+1️⃣ Clone the Repository
 git clone https://github.com/your-repo/MentorMindAI
 cd MentorMindAI
 
-2. Create virtual environment
+2️⃣ Create Virtual Environment
 python -m venv venv
 
-3. Activate environment
+3️⃣ Activate Environment
 
-Windows:
+Windows
 
 venv\Scripts\activate
 
 
-Mac/Linux:
+Mac / Linux
 
 source venv/bin/activate
 
-4. Install dependencies
+4️⃣ Install Dependencies
 pip install -r requirements.txt
 
-5. Ensure FFmpeg is installed (required for moviepy)
+5️⃣ Install FFmpeg (Required)
 
-Windows:
+Windows
 
 choco install ffmpeg
 
 
-Mac:
+Mac
 
 brew install ffmpeg
 
-6. Run python models/generate_dummy_models
+6️⃣ Generate Dummy ONNX Models (Demo Mode)
+python models/generate_dummy_models.py
 
 ▶️ How to Run Locally
 
-Start FastAPI server:
+Start the FastAPI server:
 
-uvicorn src.backend.app.main:app --reload
+uvicorn backend.app.main:app --reload
 
 
-Server runs at:
+Server URL:
 
-👉 http://localhost:8000
+http://localhost:8000
 
-Open docs:
 
-👉 http://localhost:8000/docs
+Swagger Docs:
 
-(Interactive Swagger UI)
+http://localhost:8000/docs
 
 🔥 API Endpoints
 1️⃣ Upload Video & Get Scores
+
 POST /upload/video
 
 Response
+
 {
   "file_id": "56c7e543-0b4e-49f6-9509-fb6cbe6bc9b6",
   "scores": {
-    "clarity": 0.23,
-    "engagement": 0.45,
-    "pace": 0.31,
-    "filler": -0.04,
-    "tech": 0.12
+    "clarity": 0.82,
+    "engagement": 0.56,
+    "pace": 0.74,
+    "filler": 0.21,
+    "tech": 0.88
   },
-  "overall_score": 0.28
+  "overall_score": 0.73
 }
 
 2️⃣ Convert Video into Accessibility Mode
+
 POST /convert?mode=blind
 POST /convert?mode=deaf
 POST /convert?mode=easy
 
-Response Example
+Response
+
 {
   "status": "success",
-  "output_path": "/mnt/data/uploads/video_blind_mode.mp3"
+  "output_path": "/mnt/data/uploads/video_deaf_mode.srt"
 }
 
 🧪 Example Input & Output
 Input
 
-MP4 video file
-Mode: "deaf"
+MP4 Video
+
+Mode: deaf
 
 Output
 
-Extracted audio
+Extracted Audio
 
-Speech → Text using Whisper
+Whisper ASR Transcript
 
-.srt subtitle file
+Subtitle File (.srt)
 
 1
 00:00:01,000 --> 00:00:03,000
@@ -226,37 +239,46 @@ Hello students, today we will learn AI.
 📦 List of Dependencies
 
 fastapi
+
 uvicorn[standard]
+
 python-multipart
-celery[redis]
+
+celery
+
 redis
+
 pydantic
+
 requests
+
 python-dotenv
-celery==5.3.6
-redis==5.0.1
-opencv-python
-python-dotenv
+
 numpy
-pydub
-speechrecognition
-transformers
-torch
-pillow
-moviepy
+
 onnxruntime
 
----
+opencv-python
 
+pydub
 
+moviepy
 
----
-## *Contributions
+speechrecognition
 
-Shravani Tanksale(AI Lead): Built scoring models, backend logic, Celery processing, accessibility modes, and end-to-end integration.
+transformers
 
-Vidyankshini Vibhute(Frontend): Developed UI, graphs, animations, upload flow, dashboard, and linked frontend with backend.
+torch
 
-Devika Mule(Cloud/DevOps): Set up AWS S3, Redis, Celery, cloud architecture, deployment environment, and backend optimizations.
+pillow
 
+✨ Contributions
 
+Shravani Tanksale (AI Lead)
+Built scoring models, ONNX inference pipeline, backend logic, accessibility modes, and end-to-end system integration.
+
+Vidyankshini Vibhute (Frontend)
+Developed UI, dashboards, visualizations, upload workflows, and frontend-backend integration.
+
+Devika Mule (Cloud / DevOps)
+Designed cloud architecture, storage integration, async processing pipeline, deployment strategy, and performance optimizations.
