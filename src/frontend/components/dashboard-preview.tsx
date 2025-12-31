@@ -69,10 +69,7 @@ export function DashboardPreview() {
                         {i % 3 === 0 ? "Complete" : i % 3 === 1 ? "Active" : "Draft"}
                       </span>
                     </div>
-                    <div className="text-[#605a57]">Platform access fee</div>
-                    <div className="font-medium">$3,862.32</div>
-                    <div className="text-[#605a57]">1 Aug 2024</div>
-                    <div className="text-[#605a57]">10 Jun 2024</div>
+                    
                   </div>
                 ))}
               </div>
