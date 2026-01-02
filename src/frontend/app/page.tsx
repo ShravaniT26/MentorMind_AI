@@ -228,7 +228,7 @@ export default function LandingPage() {
                 </div>
                 
                 <div className="px-6 py-3 bg-white/10 rounded-full border border-white/20">
-                  <span className="font-medium">Voice Interaction</span>
+                  <span className="font-medium">Link integration</span>
                 </div>
               </div>
             </div>
