@@ -184,3 +184,81 @@ export default function LoginPage() {
     </div>
   )
 }
+import React, { useRef, useEffect } from "react";
+import Webcam from "react-webcam";
+import * as faceapi from "face-api.js";
+
+const FaceScanner = () => {
+  const webcamRef = useRef(null);
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    loadModels();
+  }, []);
+
+  const loadModels = async () => {
+    const MODEL_URL = "/models";
+    await faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL);
+    await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL);
+    startFaceDetection();
+  };
+
+  const startFaceDetection = () => {
+    setInterval(async () => {
+      if (
+        webcamRef.current &&
+        webcamRef.current.video.readyState === 4
+      ) {
+        const video = webcamRef.current.video;
+        const videoWidth = video.videoWidth;
+        const videoHeight = video.videoHeight;
+
+        canvasRef.current.width = videoWidth;
+        canvasRef.current.height = videoHeight;
+
+        const detections = await faceapi
+          .detectAllFaces(video)
+          .withFaceLandmarks();
+
+        const resizedDetections = faceapi.resizeResults(
+          detections,
+          {
+            width: videoWidth,
+            height: videoHeight,
+          }
+        );
+
+        const ctx = canvasRef.current.getContext("2d");
+        ctx.clearRect(0, 0, videoWidth, videoHeight);
+
+        faceapi.draw.drawDetections(canvasRef.current, resizedDetections);
+      }
+    }, 300);
+  };
+
+  return (
+    <div style={{ position: "relative", width: "640px" }}>
+      <Webcam
+        ref={webcamRef}
+        style={{
+          width: "640px",
+          height: "480px",
+        }}
+        videoConstraints={{
+          facingMode: "user",
+        }}
+      />
+
+      <canvas
+        ref={canvasRef}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+        }}
+      />
+    </div>
+  );
+};
+
+export default FaceScanner;
