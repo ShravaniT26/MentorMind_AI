@@ -12,8 +12,8 @@ export function HeroSection() {
                 Effortless custom contract billing by Brillance
               </h1>
               <p className="max-w-[506px] text-center text-[#37322f]/80 text-lg font-medium leading-7">
-                Streamline your billing process with seamless automation for every custom contract, tailored by
-                Brillance.
+                MentorMind AI – Enhancing Mentor Teaching with AI-Driven Evaluation and Personalized Insights
+
               </p>
             </div>
           </div>
