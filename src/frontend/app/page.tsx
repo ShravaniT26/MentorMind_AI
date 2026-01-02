@@ -226,9 +226,7 @@ export default function LandingPage() {
                 <div className="px-6 py-3 bg-white/10 rounded-full border border-white/20">
                   <span className="font-medium">Audio Descriptions</span>
                 </div>
-                <div className="px-6 py-3 bg-white/10 rounded-full border border-white/20">
-                  <span className="font-medium">Screen Reader Support</span>
-                </div>
+                
                 <div className="px-6 py-3 bg-white/10 rounded-full border border-white/20">
                   <span className="font-medium">Voice Interaction</span>
                 </div>
