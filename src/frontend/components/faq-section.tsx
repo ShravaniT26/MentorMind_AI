@@ -26,7 +26,7 @@ const faqData: FAQItem[] = [
   {
     question: "What kind of support do you provide?",
     answer:
-      "We offer 24/7 customer support, dedicated account managers for enterprise clients, comprehensive documentation, and onboarding assistance to help you get started quickly.",
+      "We provide accessibility support for not only normal students but for blind deaf and mute students.",
   },
   {
     question: "Is my data secure with Brillance?",

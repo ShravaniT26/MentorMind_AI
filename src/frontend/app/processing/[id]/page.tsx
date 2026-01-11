@@ -25,7 +25,7 @@ export default function ProcessingPage() {
     { name: "Evaluating Engagement", status: "pending", progress: 0 },
     { name: "Assessing Tone & Confidence", status: "pending", progress: 0 },
     { name: "Measuring Pacing", status: "pending", progress: 0 },
-    { name: "Evaluating Technical Depth", status: "pending", progress: 0 },
+    { name: "Evaluating Technical Depth(Sub-topics)", status: "pending", progress: 0 },
     { name: "Generating recommendations", status: "pending", progress: 0 },
   ])
 

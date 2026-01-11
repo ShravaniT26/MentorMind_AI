@@ -37,7 +37,7 @@ interface AccessibilityInsight {
 }
 
 export default function StudentFeedbackPage() {
-  const sessionTitle = "Introduction to Machine Learning - Week 1"
+  const sessionTitle = "Science Leacture -3"
 
   const overallRating = 4.6
   const totalStudents = 48
@@ -99,8 +99,8 @@ export default function StudentFeedbackPage() {
       category: "Audio Clarity",
       studentGroup: "Blind Students",
       feedback:
-        "Voice clarity was excellent. All visual elements were verbally described, providing complete context for understanding.",
-      impact: "positive",
+        "Voice clarity was not good. All visual elements were not verbally described, providing complete context for understanding.",
+      impact: "negative",
       icon: Volume2,
     },
     {

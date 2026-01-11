@@ -161,7 +161,7 @@ export default function SessionsPage() {
 
               <Card className="bg-white border-[rgba(55,50,47,0.08)]">
                 <CardHeader className="pb-3">
-                  <CardDescription>Average Score</CardDescription>
+                  <CardDescription>Average Score(monthly)</CardDescription>
                   <CardTitle className="text-4xl">{averageScore.toFixed(1)}</CardTitle>
                 </CardHeader>
               </Card>
