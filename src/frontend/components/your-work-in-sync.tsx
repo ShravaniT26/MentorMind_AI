@@ -1,28 +1,22 @@
 import type React from "react"
 
-interface YourWorkInSyncProps {
-  /** Fixed width from Figma: 482px */
+interface MentorMindSyncProps {
   width?: number | string
-  /** Fixed height from Figma: 300px */
   height?: number | string
-  /** Optional className to pass to root */
   className?: string
-  /** Theme palette */
   theme?: "light" | "dark"
 }
 
 /**
- * Your work, in sync – Chat conversation UI
- * Generated from Figma via MCP with exact measurements (482×300px)
- * Single-file component following the v0-ready pattern used in this repo.
+ * MentorMindAI – Video Evaluation & Accessibility Flow UI
+ * Generated from Figma via MCP (482×300px)
  */
-const YourWorkInSync: React.FC<YourWorkInSyncProps> = ({
+const MentorMindSync: React.FC<MentorMindSyncProps> = ({
   width = 482,
   height = 300,
   className = "",
   theme = "dark",
 }) => {
-  // Design tokens (derived from Figma local variables)
   const themeVars =
     theme === "light"
       ? {
@@ -46,7 +40,6 @@ const YourWorkInSync: React.FC<YourWorkInSyncProps> = ({
           "--yws-shadow": "rgba(0,0,0,0.24)",
         } as React.CSSProperties)
 
-  // Figma-exported assets
   const imgFrame2147223205 = "/professional-woman-avatar-with-short-brown-hair-an.jpg"
   const imgFrame2147223206 = "/professional-man-avatar-with-beard-and-glasses-loo.jpg"
   const imgFrame2147223207 = "/professional-person-avatar-with-curly-hair-and-war.jpg"
@@ -56,19 +49,16 @@ const YourWorkInSync: React.FC<YourWorkInSyncProps> = ({
   return (
     <div
       className={className}
-      style={
-        {
-          width,
-          height,
-          position: "relative",
-          background: "transparent",
-          ...themeVars,
-        } as React.CSSProperties
-      }
+      style={{
+        width,
+        height,
+        position: "relative",
+        background: "transparent",
+        ...themeVars,
+      }}
       role="img"
-      aria-label="Chat conversation showing team collaboration sync"
+      aria-label="MentorMindAI video evaluation and accessibility feedback flow"
     >
-      {/* Root frame size 482×300 – content centered */}
       <div
         style={{
           position: "absolute",
@@ -79,232 +69,121 @@ const YourWorkInSync: React.FC<YourWorkInSyncProps> = ({
           height: "216px",
         }}
       >
-        {/* Remove the flip transformation and position messages normally */}
         <div style={{ width: "356px", height: "216px", position: "relative", transform: "scale(1.1)" }}>
-          {/* Message 1: Left side with avatar */}
-          <div
-            style={{
-              position: "absolute",
-              left: "0px",
-              top: "0px",
-              display: "flex",
-              gap: "10px",
-              alignItems: "flex-start",
-              width: "356px",
-              height: "36px",
-            }}
-          >
-            {/* Avatar */}
+          
+          {/* Message 1 */}
+          <div style={{ position: "absolute", left: 0, top: 0, display: "flex", gap: 10 }}>
             <div
               style={{
-                width: "36px",
-                height: "36px",
-                borderRadius: "44px",
+                width: 36,
+                height: 36,
+                borderRadius: 44,
                 backgroundImage: `url('${imgFrame2147223205}')`,
                 backgroundSize: "cover",
-                backgroundPosition: "center",
                 border: "1px solid var(--yws-border)",
-                flexShrink: 0,
               }}
             />
-            {/* Message bubble */}
             <div
               style={{
                 background: theme === "light" ? "#e8e5e3" : "var(--yws-bubble-light)",
-                borderRadius: "999px",
-                padding: "0px 12px",
-                height: "36px",
+                borderRadius: 999,
+                padding: "0 12px",
+                height: 36,
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "center",
               }}
             >
-              <span
-                style={{
-                  fontFamily: "Inter, sans-serif",
-                  fontWeight: 500,
-                  fontSize: "13px",
-                  lineHeight: "16px",
-                  letterSpacing: "-0.4px",
-                  color: theme === "light" ? "#37322f" : "var(--yws-text-primary)",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                Team updates flow seamlessly
+              <span style={{ fontSize: 13, fontWeight: 500 }}>
+                Video uploaded for evaluation
               </span>
             </div>
           </div>
 
-          {/* Message 2: Right side with avatar */}
-          <div
-            style={{
-              position: "absolute",
-              right: "0px",
-              top: "60px",
-              display: "flex",
-              gap: "10px",
-              alignItems: "flex-start",
-              justifyContent: "flex-end",
-            }}
-          >
-            {/* Message bubble */}
+          {/* Message 2 */}
+          <div style={{ position: "absolute", right: 0, top: 60, display: "flex", gap: 10 }}>
             <div
               style={{
                 background: theme === "light" ? "#37322f" : "var(--yws-bubble-dark)",
-                borderRadius: "999px",
-                padding: "0px 12px",
-                height: "36px",
+                borderRadius: 999,
+                padding: "0 12px",
+                height: 36,
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "center",
+                color: "#fff",
+                fontSize: 13,
+                fontWeight: 500,
               }}
             >
-              <span
-                style={{
-                  fontFamily: "Inter, sans-serif",
-                  fontWeight: 500,
-                  fontSize: "13px",
-                  lineHeight: "16px",
-                  letterSpacing: "-0.4px",
-                  color: "#ffffff",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                Hi everyone
-              </span>
+              AI analysis in progress
             </div>
-            {/* Avatar */}
             <div
               style={{
-                width: "36px",
-                height: "36px",
-                borderRadius: "44px",
+                width: 36,
+                height: 36,
+                borderRadius: 44,
                 backgroundImage: `url('${imgFrame2147223206}')`,
                 backgroundSize: "cover",
-                backgroundPosition: "center",
                 border: "1px solid var(--yws-border)",
-                flexShrink: 0,
               }}
             />
           </div>
 
-          {/* Message 3: Left side with avatar */}
-          <div
-            style={{
-              position: "absolute",
-              left: "0px",
-              top: "120px",
-              display: "flex",
-              gap: "10px",
-              alignItems: "flex-start",
-              width: "210px",
-              height: "36px",
-            }}
-          >
-            {/* Avatar */}
+          {/* Message 3 */}
+          <div style={{ position: "absolute", left: 0, top: 120, display: "flex", gap: 10 }}>
             <div
               style={{
-                width: "36px",
-                height: "36px",
-                borderRadius: "44px",
+                width: 36,
+                height: 36,
+                borderRadius: 44,
                 backgroundImage: `url('${imgFrame2147223207}')`,
                 backgroundSize: "cover",
-                backgroundPosition: "center",
                 border: "1px solid var(--yws-border)",
-                flexShrink: 0,
               }}
             />
-            {/* Message bubble */}
             <div
               style={{
                 background: theme === "light" ? "#e8e5e3" : "var(--yws-bubble-light)",
-                borderRadius: "999px",
-                padding: "0px 12px",
-                height: "36px",
+                borderRadius: 999,
+                padding: "0 12px",
+                height: 36,
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "center",
+                fontSize: 13,
+                fontWeight: 500,
               }}
             >
-              <span
-                style={{
-                  fontFamily: "Inter, sans-serif",
-                  fontWeight: 500,
-                  fontSize: "13px",
-                  lineHeight: "16px",
-                  letterSpacing: "-0.4px",
-                  color: theme === "light" ? "#37322f" : "var(--yws-text-primary)",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                How about this instead?
-              </span>
+              Accessibility modes generated
             </div>
           </div>
 
-          {/* Message 4: Center with send button */}
-          <div
-            style={{
-              position: "absolute",
-              left: "146px",
-              top: "180px",
-              display: "flex",
-              gap: "10px",
-              alignItems: "center",
-              height: "36px",
-            }}
-          >
-            {/* Message bubble */}
+          {/* Final Output */}
+          <div style={{ position: "absolute", left: 146, top: 180, display: "flex", gap: 10 }}>
             <div
               style={{
                 background: "#ffffff",
-                borderRadius: "16px",
-                padding: "0px 12px",
-                height: "36px",
+                borderRadius: 16,
+                padding: "0 12px",
+                height: 36,
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "center",
-                boxShadow: "0px 0px 0px 1px rgba(0,0,0,0.08), 0px 1px 2px -0.4px rgba(0,0,0,0.08)",
-                overflow: "hidden",
+                boxShadow: "0px 0px 0px 1px rgba(0,0,0,0.08)",
+                fontSize: 14,
               }}
             >
-              <span
-                style={{
-                  fontFamily: "Inter, sans-serif",
-                  fontWeight: 400,
-                  fontSize: "14px",
-                  lineHeight: "20px",
-                  color: "#030712",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                Great work, everyone!
-              </span>
+              Evaluation report ready
             </div>
-            {/* Send button */}
             <div
               style={{
-                width: "36px",
-                height: "36px",
-                borderRadius: "44px",
+                width: 36,
+                height: 36,
+                borderRadius: 44,
                 background: theme === "light" ? "#37322f" : "var(--yws-bubble-dark)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                boxShadow: "0px 1px 2px 0px rgba(0,0,0,0.08)",
-                cursor: "pointer",
-                flexShrink: 0,
               }}
             >
-              <img
-                src={imgArrowUp || "/placeholder.svg"}
-                alt="Send"
-                style={{
-                  width: "20px",
-                  height: "20px",
-                  filter: "brightness(0) invert(1)",
-                }}
-              />
+              <img src={imgArrowUp} alt="View result" style={{ width: 20, height: 20 }} />
             </div>
           </div>
         </div>
@@ -313,4 +192,4 @@ const YourWorkInSync: React.FC<YourWorkInSyncProps> = ({
   )
 }
 
-export default YourWorkInSync
+export default MentorMindSync
