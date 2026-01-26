@@ -20,31 +20,32 @@ export default function TestimonialsSection() {
   const [isTransitioning, setIsTransitioning] = useState(false)
 
   const testimonials = [
-    {
-      quote:
-        "In just a few minutes, we transformed our data into actionable insights. The process was seamless and incredibly efficient!",
-      name: "Jamie Marshall",
-      company: "Co-founder, Exponent",
-      image:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/ChatGPT%20Image%20Sep%2011%2C%202025%2C%2011_35_19%20AM-z4zSRLsbOQDp7MJS1t8EXmGNB6Al9Z.png",
-    },
-    {
-      quote:
-        "Brillance has revolutionized how we handle custom contracts. The automation saves us hours every week and eliminates errors completely.",
-      name: "Sarah Chen",
-      company: "VP Operations, TechFlow",
-      image:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/ChatGPT%20Image%20Sep%2011%2C%202025%2C%2010_54_18%20AM-nbiecp92QNdTudmCrHr97uekrIPzCP.png",
-    },
-    {
-      quote:
-        "The billing automation is a game-changer. What used to take our team days now happens automatically with perfect accuracy.",
-      name: "Marcus Rodriguez",
-      company: "Finance Director, InnovateCorp",
-      image:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/ChatGPT%20Image%20Sep%2011%2C%202025%2C%2011_01_05%20AM-TBOe92trRxKn4G5So1m9D2h7LRH4PG.png",
-    },
-  ]
+  {
+    quote:
+      "MentorMindAI gave clear, objective feedback on my teaching videos. The scoring felt fair, transparent, and incredibly helpful for improving my delivery.",
+    name: "Jamie Marshall",
+    company: "University Teaching Assistant",
+    image:
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/ChatGPT%20Image%20Sep%2011%2C%202025%2C%2011_35_19%20AM-z4zSRLsbOQDp7MJS1t8EXmGNB6Al9Z.png",
+  },
+  {
+    quote:
+      "The accessibility modes are a game-changer. Automatic subtitles and simplified explanations made our content usable for a much wider audience.",
+    name: "Sarah Chen",
+    company: "EdTech Product Manager",
+    image:
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/ChatGPT%20Image%20Sep%2011%2C%202025%2C%2010_54_18%20AM-nbiecp92QNdTudmCrHr97uekrIPzCP.png",
+  },
+  {
+    quote:
+      "What impressed me most was the reproducibility of evaluations. MentorMindAI removes subjectivity and brings consistency to teaching quality assessment.",
+    name: "Marcus Rodriguez",
+    company: "Academic Program Evaluator",
+    image:
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/ChatGPT%20Image%20Sep%2011%2C%202025%2C%2011_01_05%20AM-TBOe92trRxKn4G5So1m9D2h7LRH4PG.png",
+  },
+]
+
 
   useEffect(() => {
     const interval = setInterval(() => {

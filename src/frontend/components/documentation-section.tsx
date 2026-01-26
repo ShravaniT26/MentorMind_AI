@@ -65,7 +65,7 @@ export default function MentorMindSection() {
           />
 
           <h2 className="text-[#49423D] text-3xl md:text-5xl font-semibold leading-tight">
-            Your AI companion for mental well-being
+            Teaching Evalution 
           </h2>
 
           <p className="text-[#605A57] text-base leading-7">
