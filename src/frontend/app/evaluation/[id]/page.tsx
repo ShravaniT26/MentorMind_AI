@@ -385,7 +385,7 @@ export default function EvaluationReport() {
                       {worstParam.name === "Clarity" && "Crystal Clear Teaching: Structuring Explanations"}
                       {worstParam.name === "Engagement" && "Engagement Strategies for Modern Classrooms"}
                       {worstParam.name === "Tone & Confidence" && "Vocal Confidence and Tone Mastery for Educators"}
-                      {worstParam.name === "Technical Depth" &&
+                      {worstParam.name === "Technical Depth based on the reference" &&
                         "Deepening Technical Content Without Overwhelming Students"}
                     </h4>
                     <p className="text-sm text-[rgba(55,50,47,0.70)] mb-2">

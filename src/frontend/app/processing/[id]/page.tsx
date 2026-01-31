@@ -133,7 +133,7 @@ export default function ProcessingPage() {
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
             <Video className="w-6 h-6 text-blue-600 mx-auto mb-2" />
             <p className="text-sm text-blue-900">
-              Our AI is analyzing your teaching session across all five parameters. This usually takes 30-60 seconds.
+              Our AI is analyzing your teaching session across all five parameters. This usually takes 30-60 seconds for evaluation.
             </p>
           </div>
         </CardContent>

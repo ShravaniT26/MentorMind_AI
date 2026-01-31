@@ -7,7 +7,9 @@ import type React from "react"
 function Badge({ icon, text }: { icon: React.ReactNode; text: string }) {
   return (
     <div className="px-[14px] py-[6px] bg-white shadow-[0px_0px_0px_4px_rgba(55,50,47,0.05)] rounded-[90px] flex items-center gap-[8px] border border-[rgba(2,6,23,0.08)]">
-      <div className="w-[14px] h-[14px] flex items-center justify-center">{icon}</div>
+      <div className="w-[14px] h-[14px] flex items-center justify-center">
+        {icon}
+      </div>
       <div className="text-[#37322F] text-xs font-medium font-sans">
         {text}
       </div>
@@ -21,19 +23,19 @@ export default function MentorMindSection() {
 
   const cards = [
     {
-      title: "AI that listens to you",
+      title: "AI-based Teaching Evaluation",
       description:
-        "Share your thoughts freely.\nMentorMind listens without judgment.",
+        "Upload recorded teaching sessions.\nGet objective scores for clarity, engagement, pace, and depth.",
     },
     {
-      title: "Personalized mental insights",
+      title: "Deterministic & Fair Scoring",
       description:
-        "AI-driven suggestions based on\nyour emotions and patterns.",
+        "Independent ONNX models ensure\nreproducible, unbiased evaluation results.",
     },
     {
-      title: "Safe & private space",
+      title: "Accessibility-First Learning",
       description:
-        "Your conversations stay confidential\nand completely secure.",
+        "Automatically generate Blind,\nDeaf, and Easy learning modes.",
     },
   ]
 
@@ -61,17 +63,17 @@ export default function MentorMindSection() {
             icon={
               <div className="w-[10px] h-[10px] rounded-full border border-[#37322F]" />
             }
-            text="MentorMind AI"
+            text="MentorMindAI"
           />
 
           <h2 className="text-[#49423D] text-3xl md:text-5xl font-semibold leading-tight">
-            Teaching Evalution 
+            Teaching Evaluation Engine
           </h2>
 
           <p className="text-[#605A57] text-base leading-7">
-            Talk, reflect, and heal with AI-powered emotional guidance —
+            Evaluate teaching quality and generate inclusive learning formats
             <br />
-            anytime, anywhere.
+            using AI-powered video analysis.
           </p>
         </div>
       </div>
@@ -95,7 +97,11 @@ export default function MentorMindSection() {
                       : "border border-[rgba(2,6,23,0.08)]"
                   }`}
                 >
-                  <div className={`h-0.5 bg-[rgba(50,45,43,0.08)] ${isActive ? "opacity-100" : "opacity-0"}`}>
+                  <div
+                    className={`h-0.5 bg-[rgba(50,45,43,0.08)] ${
+                      isActive ? "opacity-100" : "opacity-0"
+                    }`}
+                  >
                     <div
                       key={animationKey}
                       className="h-0.5 bg-[#322D2B] animate-[progressBar_5s_linear_forwards]"
@@ -121,10 +127,10 @@ export default function MentorMindSection() {
               <div
                 className={`w-full h-full transition-all duration-300 ${
                   activeCard === 0
-                    ? "bg-gradient-to-br from-emerald-50 to-emerald-100"
+                    ? "bg-gradient-to-br from-slate-50 to-slate-100"
                     : activeCard === 1
                     ? "bg-gradient-to-br from-indigo-50 to-indigo-100"
-                    : "bg-gradient-to-br from-teal-50 to-teal-100"
+                    : "bg-gradient-to-br from-emerald-50 to-emerald-100"
                 }`}
               />
             </div>

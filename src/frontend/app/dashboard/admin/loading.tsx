@@ -6,7 +6,7 @@ const spinnerStyle = {
   height: "50px",
   border: "5px solid #f3f3f3",
   borderTop: "5px solid #3498db",
-  borderRadius: "50%",
+  borderRadius: "60%",
   animation: "spin 1s linear infinite",
   margin: "50px auto",
 };

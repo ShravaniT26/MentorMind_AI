@@ -264,7 +264,7 @@ export default function LeaderboardPage() {
             {/* Header */}
             <div className="mb-8">
               <h1 className="text-3xl font-semibold text-[#37322F] mb-2">Leaderboard & Achievements</h1>
-              <p className="text-[rgba(55,50,47,0.70)]">Track your progress and compete with fellow educators</p>
+              <p className="text-[rgba(55,50,47,0.70)]">See your progress and improve your mentorship skills</p>
             </div>
 
             {/* Your Rank Card */}
